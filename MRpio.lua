@@ -663,11 +663,11 @@ Tab:AddToggle({
 
 Tab:AddButton({
 
-	Name = "鼠标（手机非常不建议用）",
+	Name = "超人飞行",
 
 	Callback = function()
-
-loadstring(game:HttpGet(('https://pastefy.ga/V75mqzaz/raw'),true))()
+	
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/396abc/Script/refs/heads/main/MobileFly.lua"))()
 
 	end
 
