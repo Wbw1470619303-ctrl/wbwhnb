@@ -220,9 +220,9 @@ Tab:AddToggle({
 })
 
 Tab:AddButton({
-	Name = "传送玩家",
+	Name = "防摔",
 	Callback = function()
-      	loadstring(game:HttpGet(("https://pastebin.com/raw/YNVbeqPy")))()
+      	loadstring(game:HttpGet("https://raw.githubusercontent.com/cytj777i/Fall-injury/main/防止摔落伤害"))()
   	end
 })
 
@@ -230,7 +230,8 @@ Tab:AddButton({
 	Name = "玩家进入提示",
 	Callback = function()
       	loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/scriscriptsc/main/bbn.lua"))()
-  	end
+  	
+		end
 })
 
 Tab:AddButton({
