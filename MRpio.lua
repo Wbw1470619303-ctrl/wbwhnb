@@ -16,9 +16,9 @@ local about = Window:MakeTab({
 
 })
 
-about:AddParagraph("MR pio作者: MR")
-about:AddParagraph("MR pio作者qq: 425695367")
-about:AddParagraph("MRSupreme的附属脚本")
+about:AddParagraph("w 超级脚本作者: wbwhnb")
+about:AddParagraph("w 超级脚本作者qq: 2318995920")
+about:AddParagraph("w 超级脚本脚本")
 
 local about = Window:MakeTab({
     Name = "MR pio玩家信息",
@@ -32,7 +32,7 @@ about:AddParagraph("您的注入器:"," "..identifyexecutor().."")
 about:AddParagraph("您当前服务器的ID"," "..game.GameId.."")
 
 local about = Window:MakeTab({
-    Name = "MR pio公告",
+    Name = "w 超级脚本公告",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 
@@ -59,7 +59,7 @@ Tab:AddButton({
 
 	Callback = function()
 
-     setclipboard("425695367")
+     setclipboard("2318995920")
 
   	end
 
@@ -67,7 +67,7 @@ Tab:AddButton({
 
 Tab:AddButton({
 
-	Name = "禁",
+	Name = "无",
 
 	Callback = function()
 
@@ -78,8 +78,8 @@ Tab:AddButton({
 })
 
 OrionLib:MakeNotification({
-	Name = "MR pio脚本",
-	Content = "欢迎使用MRSupreme附属脚本",
+	Name = "w 超级脚本",
+	Content = "欢迎使用w超级脚本脚本",
 	Image = "rbxassetid://3679490579",
 	Time = 2
 
