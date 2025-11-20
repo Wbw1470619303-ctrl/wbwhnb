@@ -288,9 +288,9 @@ loadstring(game:HttpGet("https://pastebin.com/raw/V5PQy3y0", true))()
 })
 
 Tab:AddButton({	
-Name = "修改玩家碰撞箱",	
+Name = "超强xa hub",	
 Callback = function()
-loadstring(game:HttpGet('https://pastebin.com/raw/JYFXjEVh'))()
+loadstring(game:HttpGet("https://pastebin.com/raw/h8nC0fLb", true))()
     end
 })
 
