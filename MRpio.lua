@@ -1,10 +1,10 @@
 local OrionLib =loadstring(game:HttpGet("https://pastebin.com/raw/FUEx0f3G"))()
 local Window = OrionLib:MakeWindow({
-Name = "MR pio", 
+Name = "w 超级脚本", 
 HidePremium = false, 
 SaveConfig = true,
-IntroText = "MR pio", 
-ConfigFolder = "MR pio"
+IntroText = "w 超级脚本", 
+ConfigFolder = "w 超级脚本"
 })
 
 game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "MR pio"; Text ="欢迎使用MR附属脚本 MR pio"; Duration = 4; })
