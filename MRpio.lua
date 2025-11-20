@@ -288,9 +288,9 @@ loadstring(game:HttpGet("https://pastebin.com/raw/V5PQy3y0", true))()
 })
 
 Tab:AddButton({	
-Name = "超强xa hub",	
+Name = "超强皮脚本",	
 Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/h8nC0fLb", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/xiaopi77/xiaopi77/main/QQ1002100032-Roblox-Pi-script.lua"))()
     end
 })
 
