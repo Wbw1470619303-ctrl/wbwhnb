@@ -10,7 +10,7 @@ ConfigFolder = "w 超级脚本"
 game:GetService("StarterGui"):SetCore("SendNotification",{ Title = "MR pio"; Text ="欢迎使用MR附属脚本 MR pio"; Duration = 4; })
 
 local about = Window:MakeTab({
-    Name = "MR pio作者信息",
+    Name = "w 超级脚本作者信息",
     Icon = "rbxassetid://3679490579",
     PremiumOnly = false
 
@@ -21,7 +21,7 @@ about:AddParagraph("w 超级脚本作者qq: 2318995920")
 about:AddParagraph("w 超级脚本脚本")
 
 local about = Window:MakeTab({
-    Name = "MR pio玩家信息",
+    Name = "w 超级脚本玩家信息",
     Icon = "rbxassetid://4483345998",
     PremiumOnly = false
 
@@ -221,17 +221,23 @@ Tab:AddToggle({
 
 Tab:AddButton({
 	Name = "防摔",
+		
 	Callback = function()
+			
       	loadstring(game:HttpGet("https://raw.githubusercontent.com/cytj777i/Fall-injury/main/防止摔落伤害"))()
+			
   	end
+		
 })
 
 Tab:AddButton({
 	Name = "玩家进入提示",
+		
 	Callback = function()
+			
       	loadstring(game:HttpGet("https://raw.githubusercontent.com/boyscp/scriscriptsc/main/bbn.lua"))()
-  	
-		end
+			
+				end
 })
 
 Tab:AddButton({
@@ -260,9 +266,13 @@ Tab:AddButton({
 
 Tab:AddButton({
 	Name = "最强透视",
+		
 	Callback = function()
+			
        loadstring(game:HttpGet("https://pastebin.com/raw/uw2P2fbY"))()
+			
   	end    
+		
 })
 
 Tab:AddButton({
@@ -281,10 +291,15 @@ Tab:AddButton({
 
 Tab:AddButton({
 	Name = "无限跳",
+		
     Default = false,
+		
 	Callback = function(Value)
+			
 loadstring(game:HttpGet("https://pastebin.com/raw/V5PQy3y0", true))()
+			
 	end
+		
 })
 
 Tab:AddButton({	
@@ -312,8 +327,11 @@ loadstring(game:HttpGet(('https://raw.githubusercontent.com/SkrillexMe/SkrillexL
 
 Tab:AddButton({
 	Name = "反挂机v2",
+		
 	Callback = function()
+			
      loadstring(game:HttpGet("https://pastebin.com/raw/9fFu43FF"))()
+			
   	end    
 })
 
@@ -358,7 +376,7 @@ Tab:AddButton({
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/MZEEN2424/Graphics/main/Graphics.xml"))()
 
-end
+		end
 
 })
 
@@ -388,9 +406,13 @@ loadstring(game:HttpGet(('https://pastefy.ga/a7RTi4un/raw'),true))()
 
 Tab:AddButton({
 	Name = "子弹追踪",
+		
 	Callback = function()
+			
      loadstring(game:HttpGet("https://pastebin.com/raw/1AJ69eRG"))()
+			
   	end    
+		
 })
 
 Tab:AddButton({
