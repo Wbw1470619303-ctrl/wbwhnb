@@ -2310,7 +2310,7 @@ local Tab = Window:MakeTab({
 
 	Name = "GB",
 
-  Callback = fuction()
+  Callback = function()
 
 	getgenv().XiaoPi="皮脚本-内脏与黑火药" loadstring(game:HttpGet("https://raw.githubusercontent.com/xiaopi77/xiaopi77/refs/heads/main/Roblox-Pi-GB-Script.lua"))()
 
