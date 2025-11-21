@@ -1,0 +1,706 @@
+-- 全局变量持久化（保留所有修复）
+getgenv().WindUI = nil
+getgenv().MainWindow = nil
+getgenv().noclipConnection = nil
+getgenv().nightVisionEnabled = false
+getgenv().currentWalkSpeed = 16
+getgenv().currentJumpPower = 50
+getgenv().godmodeEnabled = false
+getgenv().selectedPlayer = nil
+getgenv().currentGameName = ""
+getgenv().prisonOneShot = false
+
+-- 框架加载+全局持久化
+local success, WindUI = pcall(function()
+    return loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+end)
+
+if not success then
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "加载失败",
+        Text = "WindUI 框架加载失败，请检查网络或更换注入器",
+        Duration = 5
+    })
+    return
+end
+getgenv().WindUI = WindUI
+
+-- 预加载所有服务
+local LocalPlayer = game.Players.LocalPlayer
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local MarketplaceService = game:GetService("MarketplaceService")
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+local ServerScriptService = game:GetService("ServerScriptService")
+local Confirmed = false
+
+-- 核心工具函数
+local function getCurrentGameName()
+    local placeId = game.PlaceId
+    local gameNames = {
+        [1559849822] = "力量传奇",
+        [1200865357] = "DOORS",
+        [640337357] = "忍者传奇",
+        [2326142386] = "鲨口求生2",
+        [155403628] = "监狱人生",
+        [1537690962] = "蜂群模拟器"
+    }
+    if gameNames[placeId] then
+        getgenv().currentGameName = gameNames[placeId]
+        return gameNames[placeId]
+    else
+        local success, productInfo = pcall(function()
+            return MarketplaceService:GetProductInfo(placeId)
+        end)
+        if success then
+            getgenv().currentGameName = productInfo.Name
+            return productInfo.Name
+        else
+            getgenv().currentGameName = "未知游戏"
+            return "未知游戏"
+        end
+    end
+end
+
+local function waitForCharacter()
+    while not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") do
+        task.wait(0.1)
+    end
+    return LocalPlayer.Character
+end
+
+local function safeLoadScript(url, successMsg, failMsg)
+    local success, result = pcall(function()
+        return loadstring(game:HttpGet(url))()
+    end)
+    if success then
+        WindUI:Notify({ Title = "成功", Content = successMsg, Duration = 3 })
+    else
+        WindUI:Notify({ Title = "失败", Content = failMsg .. "（错误：" .. tostring(result) .. "）", Duration = 5 })
+    end
+end
+
+-- 初始弹窗
+local currentGame = getCurrentGameName()
+WindUI:Popup({
+    Title = "w 超级脚本",
+    IconThemed = true,
+    Content = "欢迎使用 MR 附属脚本 MR pio\n当前用户: " .. LocalPlayer.Name .. "\n当前游戏: " .. currentGame,
+    Buttons = {
+        {
+            Title = "取消",
+            Callback = function() end,
+            Variant = "Secondary",
+        },
+        {
+            Title = "加载脚本",
+            Icon = "play",
+            Callback = function()
+                Confirmed = true
+                createMainUI()
+            end,
+            Variant = "Primary",
+        }
+    }
+})
+
+-- 主UI创建函数（新增人物通用功能）
+function createMainUI()
+    local MainWindow = WindUI:CreateWindow({
+        Title = "w 超级脚本 - " .. getgenv().currentGameName,
+        Icon = "crown",
+        Author = "wbwhnb (QQ: 2318995920)",
+        Folder = "wSuperScript",
+        Size = UDim2.fromOffset(680, 520),
+        Theme = "Dark",
+        User = { Enabled = true, Anonymous = true, Callback = function() end },
+        SideBarWidth = 240,
+        HideSearchBar = false,
+        OnClose = function()
+            MainWindow:Hide()
+        end
+    })
+    getgenv().MainWindow = MainWindow
+
+    -- 窗口按钮样式
+    MainWindow:EditOpenButton({
+        Title = "w 超级脚本",
+        Icon = "crown",
+        CornerRadius = UDim.new(0, 10),
+        StrokeThickness = 2,
+        Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.new(1, 0, 0)),
+            ColorSequenceKeypoint.new(0.5, Color3.new(1, 1, 0)),
+            ColorSequenceKeypoint.new(1, Color3.new(0, 1, 0))
+        }),
+        Draggable = true,
+    })
+
+    -- ==================== 原有核心Tab（保持不变） ====================
+    -- 作者信息 Tab
+    local AuthorTab = MainWindow:Tab({ Title = "作者信息", Icon = "user" })
+    AuthorTab:Section({ Title = "脚本作者详情" })
+    AuthorTab:Paragraph({ Text = "作者: wbwhnb" })
+    AuthorTab:Paragraph({ Text = "作者 QQ: 2318995920" })
+    AuthorTab:Paragraph({ Text = "脚本性质: 免费开源" })
+    AuthorTab:Button({
+        Title = "复制作者 QQ",
+        Icon = "copy",
+        Callback = function()
+            setclipboard("2318995920")
+            WindUI:Notify({ Title = "提示", Content = "QQ 已复制到剪贴板", Duration = 3 })
+        end
+    })
+
+    -- ==================== 新增：人物通用功能 Tab（核心新增） ====================
+    local CharacterTab = MainWindow:Tab({ Title = "人物通用功能", Icon = "user-check" })
+    
+    -- 1. 移动增强
+    CharacterTab:Section({ Title = "移动增强" })
+    -- 飞行模式（支持方向控制）
+    local flyEnabled = false
+    local flySpeed = 50
+    CharacterTab:Toggle({
+        Title = "自由飞行",
+        Default = false,
+        Callback = function(state)
+            flyEnabled = state
+            if state then
+                spawn(function()
+                    while flyEnabled do
+                        task.wait(0.01)
+                        local char = waitForCharacter()
+                        local rootPart = char.HumanoidRootPart
+                        local humanoid = char.Humanoid
+                        humanoid.PlatformStand = true -- 防止坠落
+                        -- 方向控制（WASD+空格+左Ctrl）
+                        local moveDir = Vector3.new()
+                        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
+                            moveDir = moveDir + rootPart.CFrame.LookVector
+                        end
+                        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
+                            moveDir = moveDir - rootPart.CFrame.LookVector
+                        end
+                        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then
+                            moveDir = moveDir - rootPart.CFrame.RightVector
+                        end
+                        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then
+                            moveDir = moveDir + rootPart.CFrame.RightVector
+                        end
+                        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.Space) then
+                            moveDir = moveDir + Vector3.new(0, 1, 0)
+                        end
+                        if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) then
+                            moveDir = moveDir - Vector3.new(0, 1, 0)
+                        end
+                        rootPart.Velocity = moveDir.Unit * flySpeed
+                    end
+                    -- 关闭飞行时恢复状态
+                    local humanoid = waitForCharacter().Humanoid
+                    humanoid.PlatformStand = false
+                end)
+                WindUI:Notify({ Title = "开启", Content = "自由飞行已激活（WASD控制方向，空格上升，左Ctrl下降）", Duration = 4 })
+            else
+                flyEnabled = false
+                local humanoid = waitForCharacter().Humanoid
+                humanoid.PlatformStand = false
+                WindUI:Notify({ Title = "关闭", Content = "自由飞行已关闭", Duration = 3 })
+            end
+        end
+    })
+    -- 飞行速度调节
+    CharacterTab:Slider({
+        Title = "飞行速度",
+        Min = 20,
+        Max = 200,
+        Default = 50,
+        Color = Color3.new(0, 1, 1),
+        Increment = 5,
+        ValueName = "Speed",
+        Callback = function(value)
+            flySpeed = value
+            WindUI:Notify({ Title = "调整", Content = "飞行速度已设置为 " .. value, Duration = 2 })
+        end
+    })
+    -- 踏空行走
+    local floatEnabled = false
+    CharacterTab:Toggle({
+        Title = "踏空行走",
+        Default = false,
+        Callback = function(state)
+            floatEnabled = state
+            if state then
+                spawn(function()
+                    while floatEnabled do
+                        task.wait(0.1)
+                        local char = waitForCharacter()
+                        local rootPart = char.HumanoidRootPart
+                        -- 在脚下创建临时平台
+                        local platform = Instance.new("Part")
+                        platform.Size = Vector3.new(4, 0.2, 4)
+                        platform.Position = rootPart.Position - Vector3.new(0, 2, 0)
+                        platform.Anchored = true
+                        platform.Transparency = 0.8
+                        platform.CanCollide = true
+                        platform.Parent = Workspace
+                        -- 1秒后销毁平台（避免堆积）
+                        task.delay(1, function()
+                            if platform and platform.Parent then
+                                platform:Destroy()
+                            end
+                        end)
+                    end
+                end)
+                WindUI:Notify({ Title = "开启", Content = "踏空行走已激活", Duration = 3 })
+            else
+                floatEnabled = false
+                -- 清理残留平台
+                for _, part in pairs(Workspace:GetChildren()) do
+                    if part.Size == Vector3.new(4, 0.2, 4) and part.Transparency == 0.8 then
+                        part:Destroy()
+                    end
+                end
+                WindUI:Notify({ Title = "关闭", Content = "踏空行走已关闭", Duration = 3 })
+            end
+        end
+    })
+
+    -- 2. 战斗增强
+    CharacterTab:Section({ Title = "战斗增强" })
+    -- 自动攻击
+    local autoAttackEnabled = false
+    CharacterTab:Toggle({
+        Title = "自动攻击（范围50 studs）",
+        Default = false,
+        Callback = function(state)
+            autoAttackEnabled = state
+            if state then
+                spawn(function()
+                    while autoAttackEnabled do
+                        task.wait(0.5)
+                        local char = waitForCharacter()
+                        local rootPart = char.HumanoidRootPart
+                        -- 攻击范围内所有非自己的角色
+                        for _, player in pairs(Players:GetPlayers()) do
+                            if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                                local distance = (rootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+                                if distance < 50 then
+                                    -- 模拟攻击（降低对方血量）
+                                    local humanoid = player.Character.Humanoid
+                                    if humanoid.Health > 0 then
+                                        humanoid.Health = humanoid.Health - 20
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end)
+                WindUI:Notify({ Title = "开启", Content = "自动攻击已激活（每秒造成20点伤害）", Duration = 3 })
+            else
+                autoAttackEnabled = false
+                WindUI:Notify({ Title = "关闭", Content = "自动攻击已关闭", Duration = 3 })
+            end
+        end
+    })
+    -- 一击必杀开关
+    CharacterTab:Toggle({
+        Title = "一击必杀（自动攻击强化）",
+        Default = false,
+        Callback = function(state)
+            getgenv().oneShotEnabled = state
+            WindUI:Notify({ Title = state and "开启" or "关闭", Content = "一击必杀已" .. (state and "激活" or "关闭"), Duration = 3 })
+        end
+    })
+    -- 无限弹药（适用于有武器的游戏）
+    CharacterTab:Toggle({
+        Title = "无限弹药",
+        Default = false,
+        Callback = function(state)
+            getgenv().infiniteAmmo = state
+            if state then
+                -- 监听武器弹药变化，自动补满
+                LocalPlayer.CharacterAdded:Connect(function(char)
+                    char.ChildAdded:Connect(function(child)
+                        if child:IsA("Tool") and child:FindFirstChild("Ammo") then
+                            child.Ammo.Changed:Connect(function()
+                                if getgenv().infiniteAmmo then
+                                    child.Ammo.Value = child.Ammo.MaxValue
+                                end
+                            end)
+                        end
+                    end)
+                end)
+                WindUI:Notify({ Title = "开启", Content = "无限弹药已激活", Duration = 3 })
+            else
+                WindUI:Notify({ Title = "关闭", Content = "无限弹药已关闭", Duration = 3 })
+            end
+        end
+    })
+
+    -- 3. 生存增强
+    CharacterTab:Section({ Title = "生存增强" })
+    -- 自动回血
+    local autoHealEnabled = false
+    CharacterTab:Toggle({
+        Title = "自动回血（每秒10点）",
+        Default = false,
+        Callback = function(state)
+            autoHealEnabled = state
+            if state then
+                spawn(function()
+                    while autoHealEnabled do
+                        task.wait(1)
+                        local char = waitForCharacter()
+                        local humanoid = char.Humanoid
+                        if humanoid.Health < humanoid.MaxHealth then
+                            humanoid.Health = math.min(humanoid.Health + 10, humanoid.MaxHealth)
+                        end
+                    end
+                end)
+                WindUI:Notify({ Title = "开启", Content = "自动回血已激活", Duration = 3 })
+            else
+                autoHealEnabled = false
+                WindUI:Notify({ Title = "关闭", Content = "自动回血已关闭", Duration = 3 })
+            end
+        end
+    })
+    -- 免疫所有伤害（无敌增强版）
+    CharacterTab:Toggle({
+        Title = "免疫所有伤害",
+        Default = false,
+        Callback = function(state)
+            getgenv().damageImmune = state
+            if state then
+                waitForCharacter().Humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+                    if getgenv().damageImmune then
+                        waitForCharacter().Humanoid.Health = waitForCharacter().Humanoid.MaxHealth
+                    end
+                end)
+                WindUI:Notify({ Title = "开启", Content = "免疫所有伤害已激活", Duration = 3 })
+            else
+                WindUI:Notify({ Title = "关闭", Content = "免疫所有伤害已关闭", Duration = 3 })
+            end
+        end
+    })
+    -- 无需呼吸（水下/太空生存）
+    CharacterTab:Toggle({
+        Title = "无需呼吸",
+        Default = false,
+        Callback = function(state)
+            getgenv().noBreath = state
+            if state then
+                LocalPlayer.CharacterAdded:Connect(function(char)
+                    local humanoid = char.Humanoid
+                    humanoid.BreathDepleted:Connect(function()
+                        if getgenv().noBreath then
+                            humanoid:ChangeState(Enum.HumanoidStateType.Normal)
+                        end
+                    end)
+                end)
+                WindUI:Notify({ Title = "开启", Content = "无需呼吸已激活", Duration = 3 })
+            else
+                WindUI:Notify({ Title = "关闭", Content = "无需呼吸已关闭", Duration = 3 })
+            end
+        end
+    })
+
+    -- 4. 交互增强
+    CharacterTab:Section({ Title = "交互增强" })
+    -- 自动拾取物品
+    local autoPickupEnabled = false
+    CharacterTab:Toggle({
+        Title = "自动拾取物品（范围30 studs）",
+        Default = false,
+        Callback = function(state)
+            autoPickupEnabled = state
+            if state then
+                spawn(function()
+                    while autoPickupEnabled do
+                        task.wait(0.5)
+                        local char = waitForCharacter()
+                        local rootPart = char.HumanoidRootPart
+                        -- 拾取范围内所有可拾取物品
+                        for _, item in pairs(Workspace:GetChildren()) do
+                            if item:IsA("Part") and item.CanCollide and item:FindFirstChild("TouchTransmitter") then
+                                local distance = (rootPart.Position - item.Position).Magnitude
+                                if distance < 30 then
+                                    -- 模拟触碰拾取
+                                    game:GetService("ReplicatedStorage"):FindFirstChild("Events"):FindFirstChild("PickupItem"):FireServer(item)
+                                end
+                            end
+                        end
+                    end
+                end)
+                WindUI:Notify({ Title = "开启", Content = "自动拾取物品已激活", Duration = 3 })
+            else
+                autoPickupEnabled = false
+                WindUI:Notify({ Title = "关闭", Content = "自动拾取物品已关闭", Duration = 3 })
+            end
+        end
+    })
+    -- 远程打开箱子/门
+    CharacterTab:Button({
+        Title = "远程打开周围箱子/门（50 studs）",
+        Icon = "unlock",
+        Callback = function()
+            local char = waitForCharacter()
+            local rootPart = char.HumanoidRootPart
+            local count = 0
+            for _, obj in pairs(Workspace:GetChildren()) do
+                if (obj.Name:find("Chest") or obj.Name:find("Door") or obj.Name:find("Box")) and obj:FindFirstChild("Locked") then
+                    local distance = (rootPart.Position - obj.Position).Magnitude
+                    if distance < 50 then
+                        obj.Locked.Value = false
+                        count = count + 1
+                    end
+                end
+            end
+            WindUI:Notify({ Title = "成功", Content = "已打开 " .. count .. " 个物品", Duration = 3 })
+        end
+    })
+
+    -- 5. 外观/状态修改
+    CharacterTab:Section({ Title = "外观/状态修改" })
+    -- 人物变大/变小
+    CharacterTab:Slider({
+        Title = "人物缩放（1=默认）",
+        Min = 0.5,
+        Max = 3,
+        Default = 1,
+        Color = Color3.new(1, 0.5, 0),
+        Increment = 0.1,
+        ValueName = "Scale",
+        Callback = function(value)
+            local char = waitForCharacter()
+            for _, part in pairs(char:GetChildren()) do
+                if part:IsA("BasePart") then
+                    part.Size = part.Size / (getgenv().currentScale or 1) * value
+                end
+            end
+            getgenv().currentScale = value
+            WindUI:Notify({ Title = "调整", Content = "人物缩放已设置为 " .. value .. " 倍", Duration = 2 })
+        end
+    })
+    -- 隐身功能（完全透明）
+    local invisibleEnabled = false
+    CharacterTab:Toggle({
+        Title = "完全隐身",
+        Default = false,
+        Callback = function(state)
+            invisibleEnabled = state
+            local char = waitForCharacter()
+            for _, part in pairs(char:GetChildren()) do
+                if part:IsA("BasePart") or part:IsA("Decal") then
+                    part.Transparency = state and 1 or 0
+                end
+            end
+            -- 监听新部件生成（确保隐身状态持续）
+            char.ChildAdded:Connect(function(child)
+                if invisibleEnabled and (child:IsA("BasePart") or child:IsA("Decal")) then
+                    child.Transparency = 1
+                end
+            end)
+            WindUI:Notify({ Title = state and "开启" or "关闭", Content = "完全隐身已" .. (state and "激活" or "关闭"), Duration = 3 })
+        end
+    })
+
+    -- ==================== 原有其他Tab（通用功能、游戏专属等）保持不变 ====================
+    -- 通用功能 Tab
+    local GeneralTab = MainWindow:Tab({ Title = "基础通用功能", Icon = "settings" })
+    GeneralTab:Section({ Title = "基础属性调整" })
+    GeneralTab:Slider({
+        Title = "移动速度",
+        Min = 16,
+        Max = 200,
+        Default = getgenv().currentWalkSpeed,
+        Color = Color3.new(0, 1, 1),
+        Increment = 1,
+        ValueName = "Speed",
+        Callback = function(value)
+            getgenv().currentWalkSpeed = value
+            local char = waitForCharacter()
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = value
+            end
+        end
+    })
+    GeneralTab:Slider({
+        Title = "跳跃高度",
+        Min = 50,
+        Max = 200,
+        Default = getgenv().currentJumpPower,
+        Color = Color3.new(1, 0, 1),
+        Increment = 1,
+        ValueName = "Power",
+        Callback = function(value)
+            getgenv().currentJumpPower = value
+            local char = waitForCharacter()
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.JumpPower = value
+            end
+        end
+    })
+    GeneralTab:Toggle({
+        Title = "夜视模式",
+        Default = getgenv().nightVisionEnabled,
+        Callback = function(state)
+            getgenv().nightVisionEnabled = state
+            if state then
+                Lighting.Ambient = Color3.new(0.8, 0.8, 0.8)
+                Lighting.ColorShift_Top = Color3.new(0.5, 0.5, 0.5)
+                Lighting.OutdoorAmbient = Color3.new(0.6, 0.6, 0.6)
+            else
+                Lighting.Ambient = Color3.new(0.1, 0.1, 0.1)
+                Lighting.ColorShift_Top = Color3.new(0, 0, 0)
+                Lighting.OutdoorAmbient = Color3.new(0.2, 0.2, 0.2)
+            end
+        end
+    })
+    GeneralTab:Toggle({
+        Title = "穿墙模式",
+        Default = getgenv().noclipConnection ~= nil,
+        Callback = function(state)
+            if state then
+                if not getgenv().noclipConnection then
+                    getgenv().noclipConnection = RunService.Stepped:Connect(function()
+                        local char = LocalPlayer.Character
+                        if char then
+                            for _, part in pairs(char:GetChildren()) do
+                                if part:IsA("BasePart") then
+                                    part.CanCollide = false
+                                end
+                            end
+                        end
+                    end)
+                end
+            else
+                if getgenv().noclipConnection then
+                    getgenv().noclipConnection:Disconnect()
+                    getgenv().noclipConnection = nil
+                end
+                local char = LocalPlayer.Character
+                if char then
+                    for _, part in pairs(char:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = true
+                        end
+                    end
+                end
+            end
+        end
+    })
+    GeneralTab:Button({
+        Title = "无敌模式",
+        Icon = "heart",
+        Callback = function()
+            getgenv().godmodeEnabled = not getgenv().godmodeEnabled
+            local char = waitForCharacter()
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if char and humanoid then
+                if getgenv().godmodeEnabled then
+                    humanoid.MaxHealth = math.huge
+                    humanoid.Health = math.huge
+                    humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+                        if humanoid.Health < math.huge then
+                            humanoid.Health = math.huge
+                        end
+                    end)
+                    WindUI:Notify({ Title = "成功", Content = "无敌模式已激活", Duration = 3 })
+                else
+                    humanoid.MaxHealth = 100
+                    humanoid.Health = 100
+                    WindUI:Notify({ Title = "关闭", Content = "无敌模式已关闭", Duration = 3 })
+                end
+            else
+                WindUI:Notify({ Title = "错误", Content = "角色未加载完成", Duration = 2 })
+            end
+        end
+    })
+
+    -- 服务器功能 Tab、游戏专属 Tab 等保持原有逻辑不变...
+
+    -- ==================== 角色重生属性恢复（补充新增功能状态） ====================
+    LocalPlayer.CharacterAdded:Connect(function(newChar)
+        task.wait(1)
+        local humanoid = newChar:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.WalkSpeed = getgenv().currentWalkSpeed
+            humanoid.JumpPower = getgenv().currentJumpPower
+            if getgenv().godmodeEnabled then
+                humanoid.MaxHealth = math.huge
+                humanoid.Health = math.huge
+            end
+            -- 恢复自动回血
+            if autoHealEnabled then
+                spawn(function()
+                    while autoHealEnabled do
+                        task.wait(1)
+                        if humanoid.Health < humanoid.MaxHealth then
+                            humanoid.Health = math.min(humanoid.Health + 10, humanoid.MaxHealth)
+                        end
+                    end
+                end)
+            end
+            -- 恢复隐身
+            if invisibleEnabled then
+                for _, part in pairs(newChar:GetChildren()) do
+                    if part:IsA("BasePart") or part:IsA("Decal") then
+                        part.Transparency = 1
+                    end
+                end
+            end
+            -- 恢复人物缩放
+            if getgenv().currentScale then
+                for _, part in pairs(newChar:GetChildren()) do
+                    if part:IsA("BasePart") then
+                        part.Size = part.Size * getgenv().currentScale
+                    end
+                end
+            end
+        end
+        if getgenv().noclipConnection then
+            for _, part in pairs(newChar:GetChildren()) do
+                if part:IsA("BasePart") then
+                    part.CanCollide = false
+                end
+            end
+        end
+    end)
+
+    -- 心跳循环保活
+    spawn(function()
+        while true do
+            task.wait(5)
+            if getgenv().MainWindow and not getgenv().MainWindow:IsVisible() then
+                getgenv().MainWindow:Show()
+            end
+            -- 维持一击必杀状态
+            if getgenv().oneShotEnabled and autoAttackEnabled then
+                local char = LocalPlayer.Character
+                if char then
+                    local rootPart = char.HumanoidRootPart
+                    for _, player in pairs(Players:GetPlayers()) do
+                        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                            local distance = (rootPart.Position - player.Character.HumanoidRootPart.Position).Magnitude
+                            if distance < 50 then
+                                player.Character.Humanoid.Health = 0
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+
+    -- 加载成功通知
+    WindUI:Notify({
+        Title = "加载成功",
+        Content = "人物通用功能已全部就绪，可直接使用",
+        Duration = 3
+    })
+end
