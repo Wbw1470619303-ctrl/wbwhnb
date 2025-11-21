@@ -1,0 +1,169 @@
+-- 全局变量持久化（保留所有修复）
+getgenv().WindUI = nil
+getgenv().MainWindow = nil
+getgenv().noclipConnection = nil
+getgenv().nightVisionEnabled = false
+getgenv().currentWalkSpeed = 16
+getgenv().currentJumpPower = 50
+getgenv().godmodeEnabled = false
+getgenv().selectedPlayer = nil
+getgenv().currentGameName = ""
+getgenv().prisonOneShot = false
+getgenv().authorName = "wbwhnb"
+getgenv().authorTag = "w超级脚本作者"
+getgenv().authorNoticeSent = false
+
+-- 框架加载+预加载服务等原有逻辑保持不变...
+
+-- 主UI创建函数（核心修改：基础通用功能 Tab 新增超人飞行）
+function createMainUI()
+    local MainWindow = WindUI:CreateWindow({
+        Title = "w 超级脚本 - " .. getgenv().currentGameName,
+        Icon = "crown",
+        Author = "wbwhnb (QQ: 2318995920)",
+        Folder = "wSuperScript",
+        Size = UDim2.fromOffset(680, 520),
+        Theme = "Dark",
+        User = { Enabled = true, Anonymous = true, Callback = function() end },
+        SideBarWidth = 240,
+        HideSearchBar = false,
+        OnClose = function()
+            MainWindow:Hide()
+        end
+    })
+    getgenv().MainWindow = MainWindow
+
+    -- 窗口按钮样式等原有逻辑保持不变...
+
+    -- ==================== 基础通用功能 Tab（新增超人飞行） ====================
+    local GeneralTab = MainWindow:Tab({ Title = "基础通用功能", Icon = "settings" })
+    GeneralTab:Section({ Title = "基础属性调整" })
+    GeneralTab:Slider({
+        Title = "移动速度",
+        Min = 16,
+        Max = 200,
+        Default = getgenv().currentWalkSpeed,
+        Color = Color3.new(0, 1, 1),
+        Increment = 1,
+        ValueName = "Speed",
+        Callback = function(value)
+            getgenv().currentWalkSpeed = value
+            local char = waitForCharacter()
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = value
+            end
+        end
+    })
+    GeneralTab:Slider({
+        Title = "跳跃高度",
+        Min = 50,
+        Max = 200,
+        Default = getgenv().currentJumpPower,
+        Color = Color3.new(1, 0, 1),
+        Increment = 1,
+        ValueName = "Power",
+        Callback = function(value)
+            getgenv().currentJumpPower = value
+            local char = waitForCharacter()
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.JumpPower = value
+            end
+        end
+    })
+    GeneralTab:Toggle({
+        Title = "夜视模式",
+        Default = getgenv().nightVisionEnabled,
+        Callback = function(state)
+            getgenv().nightVisionEnabled = state
+            if state then
+                Lighting.Ambient = Color3.new(0.8, 0.8, 0.8)
+                Lighting.ColorShift_Top = Color3.new(0.5, 0.5, 0.5)
+                Lighting.OutdoorAmbient = Color3.new(0.6, 0.6, 0.6)
+            else
+                Lighting.Ambient = Color3.new(0.1, 0.1, 0.1)
+                Lighting.ColorShift_Top = Color3.new(0, 0, 0)
+                Lighting.OutdoorAmbient = Color3.new(0.2, 0.2, 0.2)
+            end
+        end
+    })
+    GeneralTab:Toggle({
+        Title = "穿墙模式",
+        Default = getgenv().noclipConnection ~= nil,
+        Callback = function(state)
+            if state then
+                if not getgenv().noclipConnection then
+                    getgenv().noclipConnection = RunService.Stepped:Connect(function()
+                        local char = LocalPlayer.Character
+                        if char then
+                            for _, part in pairs(char:GetChildren()) do
+                                if part:IsA("BasePart") then
+                                    part.CanCollide = false
+                                end
+                            end
+                        end
+                    end)
+                end
+            else
+                if getgenv().noclipConnection then
+                    getgenv().noclipConnection:Disconnect()
+                    getgenv().noclipConnection = nil
+                end
+                local char = LocalPlayer.Character
+                if char then
+                    for _, part in pairs(char:GetChildren()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = true
+                        end
+                    end
+                end
+            end
+        end
+    })
+    GeneralTab:Button({
+        Title = "无敌模式",
+        Icon = "heart",
+        Callback = function()
+            getgenv().godmodeEnabled = not getgenv().godmodeEnabled
+            local char = waitForCharacter()
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if char and humanoid then
+                if getgenv().godmodeEnabled then
+                    humanoid.MaxHealth = math.huge
+                    humanoid.Health = math.huge
+                    humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+                        if humanoid.Health < math.huge then
+                            humanoid.Health = math.huge
+                        end
+                    end)
+                    WindUI:Notify({ Title = "成功", Content = "无敌模式已激活", Duration = 3 })
+                else
+                    humanoid.MaxHealth = 100
+                    humanoid.Health = 100
+                    WindUI:Notify({ Title = "关闭", Content = "无敌模式已关闭", Duration = 3 })
+                end
+            else
+                WindUI:Notify({ Title = "错误", Content = "角色未加载完成", Duration = 2 })
+            end
+        end
+    })
+
+    -- 新增：超人飞行按钮（调用指定脚本）
+    GeneralTab:Button({
+        Title = "超人飞行",
+        Icon = "plane",
+        Callback = function()
+            -- 调用指定的 MobileFly 脚本
+            safeLoadScript(
+                "https://raw.githubusercontent.com/396abc/Script/refs/heads/main/MobileFly.lua",
+                "超人飞行已激活",
+                "超人飞行加载失败"
+            )
+        end
+    })
+
+    -- 其他Tab（人物通用功能、服务器功能、游戏专属等）保持不变...
+
+    -- 角色重生属性恢复、心跳循环保活等原有逻辑保持不变...
+end
