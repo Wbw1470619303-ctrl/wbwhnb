@@ -1,0 +1,835 @@
+-- Delta 适配：简化全局变量（避免 Delta 注入器限制）
+local Global = {
+    WindUI = nil,
+    MainWindow = nil,
+    noclipConnection = nil,
+    nightVisionEnabled = false,
+    currentWalkSpeed = 16,
+    currentJumpPower = 50,
+    godmodeEnabled = false,
+    autoswingEnabled = false,
+    -- 翻译功能全局变量（整合进 Global 表）
+    translatedCache = {},
+    translatedObjects = {},
+    isTranslationEnabled = false,
+    translationConnection = nil,
+    TARGET_LANGUAGE = "zh-CN",
+    SCAN_INTERVAL = 2,
+    MAX_TEXT_LENGTH = 500,
+    DANGEROUS_COMMANDS = {
+        "neon", "shine", "ghost", "gold", "spin", 
+        "bighead", "smallhead", "giantdwarf", "squash"
+    },
+    SUPPORTED_UI_TYPES = {
+        "TextLabel", "TextButton", "TextBox", "TextLabel", 
+        "Frame", "ScrollingFrame", "ImageButton", "ImageLabel"
+    },
+    LANGUAGE_PATTERNS = {
+        ["zh-CN"] = {
+            pattern = "[\199-\244][\128-\191]*[\128-\191]",
+            exclude = "[\227][\128-\191][\128-\191]"
+        },
+        ["zh-TW"] = { pattern = "[\227][\128-\191][\128-\191]" },
+        ["ja"] = {
+            pattern = "[\123-\125]|[\199-\244][\128-\191]*[\128-\191]",
+            exclude = "[\199-\244][\128-\191]*[\128-\191]"
+        },
+        ["ko"] = { pattern = "[\234-\235][\128-\191][\128-\191]|[\236-\237][\128-\191][\128-\191]" },
+        ["ar"] = { pattern = "[\216-\219][\128-\191]" },
+        ["ru"] = { pattern = "[\208-\209][\128-\191]" },
+        ["th"] = { pattern = "[\224-\231][\128-\191]" },
+        ["en"] = {
+            pattern = "[A-Za-z]",
+            exclude = "[\199-\244][\128-\191]*[\128-\191]"
+        }
+    }
+}
+
+-- Delta 兼容：框架加载（替换为 Delta 支持的 HttpGet 方式）
+local success, WindUI = pcall(function()
+    local framework = game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua")
+    return loadstring(framework)()
+end)
+
+if not success then
+    -- Delta 适配：使用原生通知（避免 SetCore 兼容性问题）
+    local notification = Instance.new("ScreenGui")
+    notification.Name = "LoadFailNotice"
+    notification.Parent = game.Players.LocalPlayer.PlayerGui
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.fromOffset(300, 80)
+    textLabel.Position = UDim2.fromScale(0.5, 0.1)
+    textLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+    textLabel.BackgroundColor3 = Color3.new(0, 0, 0)
+    textLabel.TextColor3 = Color3.new(1, 0, 0)
+    textLabel.Text = "WindUI 框架加载失败\n请检查网络或更新 Delta 注入器"
+    textLabel.TextWrapped = true
+    textLabel.Parent = notification
+    task.wait(5)
+    notification:Destroy()
+    return
+end
+
+Global.WindUI = WindUI
+
+-- 预加载所有必需服务（Delta 注入器需显式获取）
+local LocalPlayer = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Lighting = game:GetService("Lighting")
+local MarketplaceService = game:GetService("MarketplaceService")
+local HttpService = game:GetService("HttpService")
+local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+local CoreGui = game:GetService("CoreGui")
+local Confirmed = false
+
+-- 角色加载检测函数（Delta 适配：增加超时处理）
+local function waitForCharacter()
+    local timeout = 0
+    while not LocalPlayer.Character or not LocalPlayer.Character:FindFirstChild("HumanoidRootPart") do
+        task.wait(0.1)
+        timeout += 0.1
+        if timeout >= 10 then -- 10秒超时
+            return nil
+        end
+    end
+    return LocalPlayer.Character
+end
+
+-- ==================== 翻译功能核心函数（Delta 适配） ====================
+-- 检查是否为危险文本
+local function isDangerousText(text)
+    if not text or type(text) ~= "string" then return false end
+    local lowerText = text:lower()
+    for _, cmd in ipairs(Global.DANGEROUS_COMMANDS) do
+        if lowerText:find(cmd) then
+            return true
+        end
+    end
+    return false
+end
+
+-- 检查是否需要跳过翻译
+local function shouldSkipTranslation(text)
+    if not text or text == "" or Global.translatedCache[text] then
+        return true
+    end
+    
+    -- 跳过纯数字、特殊字符和过长的文本
+    if text:match("^%s*$") or 
+       text:match("^[0-9%.%s,:/]+$") or 
+       #text > Global.MAX_TEXT_LENGTH or
+       isDangerousText(text) then
+        Global.translatedCache[text] = text
+        return true
+    end
+    
+    return false
+end
+
+-- 增强的语言检测函数
+local function detectLanguage(text)
+    if not text or type(text) ~= "string" or text == "" then
+        return "en" -- 默认英语
+    end
+    
+    -- 检查是否是中文
+    if text:match(Global.LANGUAGE_PATTERNS["zh-CN"].pattern) and 
+       (not Global.LANGUAGE_PATTERNS["zh-CN"].exclude or not text:match(Global.LANGUAGE_PATTERNS["zh-CN"].exclude)) then
+        return "zh-CN"
+    end
+    
+    -- 检查是否是繁体中文
+    if text:match(Global.LANGUAGE_PATTERNS["zh-TW"].pattern) then
+        return "zh-TW"
+    end
+    
+    -- 检查是否是日语
+    if text:match(Global.LANGUAGE_PATTERNS["ja"].pattern) and 
+       (not Global.LANGUAGE_PATTERNS["ja"].exclude or not text:match(Global.LANGUAGE_PATTERNS["ja"].exclude)) then
+        return "ja"
+    end
+    
+    -- 检查是否是韩语
+    if text:match(Global.LANGUAGE_PATTERNS["ko"].pattern) then
+        return "ko"
+    end
+    
+    -- 检查是否是阿拉伯语
+    if text:match(Global.LANGUAGE_PATTERNS["ar"].pattern) then
+        return "ar"
+    end
+    
+    -- 检查是否是俄语
+    if text:match(Global.LANGUAGE_PATTERNS["ru"].pattern) then
+        return "ru"
+    end
+    
+    -- 检查是否是泰语
+    if text:match(Global.LANGUAGE_PATTERNS["th"].pattern) then
+        return "th"
+    end
+    
+    -- 默认认为是英语
+    return "en"
+end
+
+-- 翻译函数（Delta 适配：双重错误捕获+备选API）
+local function translate(text)
+    if shouldSkipTranslation(text) then
+        return Global.translatedCache[text] or text
+    end
+
+    -- 检测源语言
+    local sourceLang = detectLanguage(text)
+    
+    -- 如果检测到已经是中文，直接返回
+    if sourceLang == "zh-CN" or sourceLang == "zh-TW" then
+        Global.translatedCache[text] = text
+        return text
+    end
+
+    -- 使用备选翻译API（如果Google翻译失败）
+    local function tryAlternativeAPI()
+        local success, response = pcall(function()
+            return game:HttpGet(
+                ("https://api.mymemory.translated.net/get?q=%s&langpair=%s|%s")
+                :format(HttpService:UrlEncode(text), sourceLang, Global.TARGET_LANGUAGE)
+            )
+        end)
+        
+        if success and response then
+            local ok, data = pcall(HttpService.JSONDecode, HttpService, response)
+            if ok and data and data.responseData and data.responseData.translatedText then
+                return data.responseData.translatedText
+            end
+        end
+        return nil
+    end
+
+    -- 尝试使用Google翻译API（Delta 适配：拆分HttpGet和JSONDecode）
+    local success, response = pcall(function()
+        return game:HttpGet(
+            ("https://translate.googleapis.com/translate_a/single?client=gtx&sl=%s&tl=%s&dt=t&q=%s")
+            :format(sourceLang, Global.TARGET_LANGUAGE, HttpService:UrlEncode(text))
+        )
+    end)
+
+    if success and response then
+        local ok, data = pcall(HttpService.JSONDecode, HttpService, response)
+        if ok and data and data[1] then
+            local translatedText = ""
+            for _, segment in ipairs(data[1]) do
+                if segment[1] then
+                    translatedText = translatedText .. segment[1]
+                end
+            end
+            
+            if translatedText ~= "" and translatedText ~= text then
+                Global.translatedCache[text] = translatedText
+                print("翻译: \"" .. text .. "\" -> \"" .. translatedText .. "\"")
+                return translatedText
+            end
+        end
+    end
+
+    -- 尝试备选API
+    local altTranslation = tryAlternativeAPI()
+    if altTranslation then
+        Global.translatedCache[text] = altTranslation
+        print("备选API翻译: \"" .. text .. "\" -> \"" .. altTranslation .. "\"")
+        return altTranslation
+    end
+
+    Global.translatedCache[text] = text
+    return text -- 出错时返回原文
+end
+
+-- 检查UI元素是否有文本内容
+local function hasTextContent(gui)
+    if gui:IsA("TextLabel") or gui:IsA("TextButton") or gui:IsA("TextBox") then
+        return gui.Text and gui.Text ~= ""
+    elseif gui:IsA("ImageButton") or gui:IsA("ImageLabel") then
+        return gui:GetAttribute("Text") or gui.Name ~= ""
+    end
+    return false
+end
+
+-- 获取UI元素的文本内容
+local function getTextContent(gui)
+    if gui:IsA("TextLabel") or gui:IsA("TextButton") or gui:IsA("TextBox") then
+        return gui.Text
+    elseif gui:IsA("ImageButton") or gui:IsA("ImageLabel") then
+        return gui:GetAttribute("Text") or gui.Name
+    end
+    return nil
+end
+
+-- 设置UI元素的文本内容
+local function setTextContent(gui, text)
+    if gui:IsA("TextLabel") or gui:IsA("TextButton") or gui:IsA("TextBox") then
+        gui.Text = text
+    elseif gui:IsA("ImageButton") or gui:IsA("ImageLabel") then
+        gui:SetAttribute("OriginalText", getTextContent(gui))
+        gui:SetAttribute("Text", text)
+    end
+end
+
+-- 扫描并翻译UI元素（Delta 适配：避免重复翻译）
+local function scanAndTranslate()
+    local count = 0
+    
+    -- 扫描PlayerGui
+    for _, gui in ipairs(playerGui:GetDescendants()) do
+        if not Global.translatedObjects[gui] and hasTextContent(gui) then
+            local text = getTextContent(gui)
+            if text and text ~= "" then
+                Global.translatedObjects[gui] = true
+                local translatedText = translate(text)
+                if getTextContent(gui) == text then -- 确保文本没有被修改过
+                    setTextContent(gui, translatedText)
+                    count = count + 1
+                end
+            end
+        end
+    end
+    
+    -- 扫描CoreGui（游戏界面元素）
+    for _, gui in ipairs(CoreGui:GetDescendants()) do
+        if not Global.translatedObjects[gui] and hasTextContent(gui) then
+            local text = getTextContent(gui)
+            if text and text ~= "" then
+                Global.translatedObjects[gui] = true
+                local translatedText = translate(text)
+                if getTextContent(gui) == text then -- 确保文本没有被修改过
+                    setTextContent(gui, translatedText)
+                    count = count + 1
+                end
+            end
+        end
+    end
+    
+    return count
+end
+
+-- 初始弹窗（Delta 适配：简化弹窗参数）
+WindUI:Popup({
+    Title = "w 超级脚本",
+    IconThemed = true,
+    Content = "欢迎使用 MR 附属脚本 MR pio\n当前用户: " .. LocalPlayer.Name,
+    Buttons = {
+        { Title = "取消", Callback = function() end },
+        { Title = "加载脚本", Callback = function() Confirmed = true; createMainUI() end }
+    }
+})
+
+-- 主UI创建函数（修复语法闭合+Delta适配）
+function createMainUI()
+    -- Delta 适配：窗口参数简化（避免不支持的属性）
+    local MainWindow = WindUI:CreateWindow({
+        Title = "w 超级脚本",
+        Icon = "crown",
+        Author = "wbwhnb (QQ: 2318995920)",
+        Folder = "wSuperScript",
+        Size = UDim2.fromOffset(600, 400),
+        Theme = "Dark",
+        SideBarWidth = 220,
+        OnClose = function() MainWindow:Hide() end -- 仅隐藏不销毁
+    })
+    Global.MainWindow = MainWindow
+
+    -- 窗口按钮样式（Delta 适配：移除复杂颜色序列）
+    MainWindow:EditOpenButton({
+        Title = "w 超级脚本",
+        Icon = "crown",
+        CornerRadius = UDim.new(0, 10),
+        StrokeThickness = 2,
+        Color = ColorSequence.new(Color3.new(1, 0, 0), Color3.new(0, 1, 0)),
+        Draggable = true,
+    })
+
+    -- ==================== 作者信息 Tab ====================
+    local AuthorTab = MainWindow:Tab({ Title = "作者信息", Icon = "user" })
+    AuthorTab:Section({ Title = "脚本作者详情" })
+    AuthorTab:Paragraph({ Text = "作者: wbwhnb" })
+    AuthorTab:Paragraph({ Text = "作者 QQ: 2318995920" })
+    AuthorTab:Paragraph({ Text = "脚本性质: 免费开源" })
+    AuthorTab:Button({
+        Title = "复制作者 QQ",
+        Callback = function()
+            setclipboard("2318995920")
+            WindUI:Notify({ Title = "提示", Content = "QQ 已复制到剪贴板", Duration = 3 })
+        end
+    })
+
+    -- ==================== 通用功能 Tab ====================
+    local GeneralTab = MainWindow:Tab({ Title = "通用功能", Icon = "settings" })
+    GeneralTab:Section({ Title = "基础属性调整" })
+
+    -- 速度调节
+    GeneralTab:Slider({
+        Title = "移动速度",
+        Min = 16,
+        Max = 200,
+        Default = Global.currentWalkSpeed,
+        Color = Color3.new(0, 1, 1),
+        Increment = 1,
+        ValueName = "Speed",
+        Callback = function(value)
+            Global.currentWalkSpeed = value
+            local char = waitForCharacter()
+            if char then
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid then humanoid.WalkSpeed = value end
+            end
+        end
+    })
+
+    -- 跳跃高度调节
+    GeneralTab:Slider({
+        Title = "跳跃高度",
+        Min = 50,
+        Max = 200,
+        Default = Global.currentJumpPower,
+        Color = Color3.new(1, 0, 1),
+        Increment = 1,
+        ValueName = "Power",
+        Callback = function(value)
+            Global.currentJumpPower = value
+            local char = waitForCharacter()
+            if char then
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid then humanoid.JumpPower = value end
+            end
+        end
+    })
+
+    -- 夜视模式
+    GeneralTab:Toggle({
+        Title = "夜视模式",
+        Default = Global.nightVisionEnabled,
+        Callback = function(state)
+            Global.nightVisionEnabled = state
+            if state then
+                Lighting.Ambient = Color3.new(0.8, 0.8, 0.8)
+                Lighting.OutdoorAmbient = Color3.new(0.6, 0.6, 0.6)
+            else
+                Lighting.Ambient = Color3.new(0.1, 0.1, 0.1)
+                Lighting.OutdoorAmbient = Color3.new(0.2, 0.2, 0.2)
+            end
+        end
+    })
+
+    -- 穿墙模式（Delta 适配：避免连接泄露）
+    GeneralTab:Toggle({
+        Title = "穿墙模式",
+        Default = false,
+        Callback = function(state)
+            if state then
+                if not Global.noclipConnection then
+                    Global.noclipConnection = RunService.Stepped:Connect(function()
+                        local char = LocalPlayer.Character
+                        if char then
+                            for _, part in pairs(char:GetChildren()) do
+                                if part:IsA("BasePart") then part.CanCollide = false end
+                            end
+                        end
+                    end)
+                end
+            else
+                if Global.noclipConnection then
+                    Global.noclipConnection:Disconnect()
+                    Global.noclipConnection = nil
+                end
+                local char = LocalPlayer.Character
+                if char then
+                    for _, part in pairs(char:GetChildren()) do
+                        if part:IsA("BasePart") then part.CanCollide = true end
+                    end
+                end
+            end
+        end
+    })
+
+    -- 无敌模式
+    GeneralTab:Button({
+        Title = "无敌模式",
+        Callback = function()
+            Global.godmodeEnabled = not Global.godmodeEnabled
+            local char = waitForCharacter()
+            if char then
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    if Global.godmodeEnabled then
+                        humanoid.MaxHealth = math.huge
+                        humanoid.Health = math.huge
+                        humanoid:GetPropertyChangedSignal("Health"):Connect(function()
+                            if humanoid.Health < math.huge then humanoid.Health = math.huge end
+                        end)
+                        WindUI:Notify({ Title = "成功", Content = "无敌模式已激活", Duration = 3 })
+                    else
+                        humanoid.MaxHealth = 100
+                        humanoid.Health = 100
+                        WindUI:Notify({ Title = "关闭", Content = "无敌模式已关闭", Duration = 3 })
+                    end
+                end
+            else
+                WindUI:Notify({ Title = "错误", Content = "角色未加载完成", Duration = 2 })
+            end
+        end
+    })
+
+    -- 点击传送
+    GeneralTab:Button({
+        Title = "点击传送",
+        Callback = function()
+            local tool = Instance.new("Tool")
+            tool.RequiresHandle = false
+            tool.Name = "[FE] 点击传送工具"
+            tool.Activated:Connect(function()
+                local mouse = LocalPlayer:GetMouse()
+                local char = waitForCharacter()
+                if mouse.Hit and char and char:FindFirstChild("HumanoidRootPart") then
+                    local pos = mouse.Hit.Position + Vector3.new(0, 2.5, 0)
+                    char.HumanoidRootPart.CFrame = CFrame.new(pos)
+                end
+            end)
+            tool.Parent = LocalPlayer.Backpack
+            WindUI:Notify({ Title = "获取", Content = "传送工具已放入背包", Duration = 2 })
+        end
+    })
+
+    -- ==================== 新增：xahub 脚本（Delta 适配） ====================
+    GeneralTab:Section({ Title = "第三方脚本" })
+    GeneralTab:Button({
+        Title = "加载 xahub",
+        Callback = function()
+            -- Delta 适配：拆分 HttpGet 和 loadstring，用 pcall 捕获错误
+            local success, xahubScript = pcall(function()
+                return game:HttpGet("https://pastebin.com/raw/h8nC0fLb", true)
+            end)
+            if not success then
+                WindUI:Notify({ Title = "加载失败", Content = "xahub 链接无法访问，请检查网络", Duration = 3 })
+                return
+            end
+            -- 执行脚本并捕获错误
+            local execSuccess = pcall(function()
+                loadstring(xahubScript)()
+            end)
+            if execSuccess then
+                WindUI:Notify({ Title = "加载成功", Content = "xahub 脚本已执行", Duration = 3 })
+            else
+                WindUI:Notify({ Title = "执行失败", Content = "xahub 脚本语法错误或不兼容 Delta", Duration = 3 })
+            end
+        end
+    })
+
+    -- ==================== 新增：翻译功能 Tab（独立 Tab，Delta 适配） ====================
+    local TranslationTab = MainWindow:Tab({ Title = "翻译功能", Icon = "language" })
+    local TranslationSection = TranslationTab:Section({ Title = "自动汉化", true })
+
+    -- 自动翻译 Toggle
+    TranslationSection:Toggle({
+        Title = "开启自动翻译",
+        Default = false,
+        Callback = function(state)
+            Global.isTranslationEnabled = state
+            if state then
+                print("自动翻译已开启，每" .. Global.SCAN_INTERVAL .. "秒扫描一次")
+                
+                -- 关闭之前的连接（如果有）
+                if Global.translationConnection then
+                    Global.translationConnection:Disconnect()
+                    Global.translationConnection = nil
+                end
+                
+                -- 立即扫描一次
+                local count = scanAndTranslate()
+                if count > 0 then
+                    print("初始扫描翻译了 " .. count .. " 个文本")
+                    WindUI:Notify({ Title = "翻译完成", Content = "初始扫描翻译了 " .. count .. " 个文本", Duration = 3 })
+                end
+                
+                -- 创建新的定时扫描（Delta 适配：使用 Heartbeat + task.wait）
+                Global.translationConnection = RunService.Heartbeat:Connect(function()
+                    if Global.isTranslationEnabled then
+                        local count = scanAndTranslate()
+                        if count > 0 then
+                            print("自动扫描翻译了 " .. count .. " 个文本")
+                            WindUI:Notify({ Title = "翻译完成", Content = "自动扫描翻译了 " .. count .. " 个文本", Duration = 2 })
+                        end
+                        task.wait(Global.SCAN_INTERVAL)
+                    end
+                end)
+            else
+                -- 关闭定时扫描
+                if Global.translationConnection then
+                    Global.translationConnection:Disconnect()
+                    Global.translationConnection = nil
+                end
+                print("自动翻译已关闭")
+                WindUI:Notify({ Title = "已关闭", Content = "自动翻译功能已关闭", Duration = 2 })
+            end
+        end
+    })
+
+    -- 立即扫描翻译按钮
+    TranslationSection:Button({
+        Title = "立即扫描翻译",
+        Callback = function()
+            local count = scanAndTranslate()
+            WindUI:Notify({ Title = "扫描完成", Content = "本次翻译了 " .. count .. " 个文本", Duration = 3 })
+        end
+    })
+
+    -- 清空翻译缓存按钮
+    TranslationSection:Button({
+        Title = "清空翻译缓存",
+        Callback = function()
+            Global.translatedCache = {}
+            Global.translatedObjects = {}
+            WindUI:Notify({ Title = "缓存已清空", Content = "下次扫描将重新翻译所有文本", Duration = 3 })
+        end
+    })
+
+    -- ==================== 娱乐功能 Tab ====================
+    local FunTab = MainWindow:Tab({ Title = "娱乐功能", Icon = "emoji" })
+    FunTab:Button({
+        Title = "蓝屏特效",
+        Callback = function()
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://github.com/RunDTM/roblox-bluescreen/raw/main/bsod.lua"))()
+            end)
+            if success then
+                WindUI:Notify({ Title = "开启", Content = "蓝屏特效已激活（大退关闭）", Duration = 3 })
+            else
+                WindUI:Notify({ Title = "失败", Content = "蓝屏脚本链接失效", Duration = 3 })
+            end
+        end
+    })
+    FunTab:Button({
+        Title = "自杀",
+        Callback = function()
+            local char = waitForCharacter()
+            if char then
+                local humanoid = char:FindFirstChildOfClass("Humanoid")
+                if humanoid then humanoid.Health = 0 end
+            end
+        end
+    })
+
+    -- ==================== DOORS 专属 Tab ====================
+    local DoorsTab = MainWindow:Tab({ Title = "DOORS", Icon = "door-open" })
+    DoorsTab:Section({ Title = "核心功能" })
+    DoorsTab:Button({
+        Title = "最强汉化脚本",
+        Callback = function()
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://pastebin.com/raw/65TwT8ja"))()
+            end)
+            WindUI:Notify({
+                Title = success and "加载成功" or "加载失败",
+                Content = success and "DOORS 汉化脚本已执行" or "脚本链接失效，请更换",
+                Duration = 3
+            })
+        end
+    })
+    DoorsTab:Button({
+        Title = "门绘图显示",
+        Callback = function()
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/cbhlyy/lyycbh/main/doors1"))()
+            end)
+            WindUI:Notify({
+                Title = success and "加载成功" or "加载失败",
+                Content = success and "门绘图显示已开启" or "脚本链接失效，请更换",
+                Duration = 3
+            })
+        end
+    })
+    DoorsTab:Button({
+        Title = "道具吸铁石",
+        Callback = function()
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/MrNeRD0/Doors-Hack/main/MagnetByNerd.lua"))()
+            end)
+            WindUI:Notify({
+                Title = success and "加载成功" or "加载失败",
+                Content = success and "吸铁石功能已激活" or "脚本链接失效，请更换",
+                Duration = 3
+            })
+        end
+    })
+    DoorsTab:Button({
+        Title = "获取骷髅钥匙",
+        Callback = function()
+            local success = pcall(function()
+                local item = game:GetObjects("rbxassetid://11697889137")[1]
+                item.Parent = LocalPlayer.Backpack
+            end)
+            WindUI:Notify({
+                Title = success and "成功" or "失败",
+                Content = success and "骷髅钥匙已放入背包" or "钥匙ID失效",
+                Duration = 3
+            })
+        end
+    })
+
+    -- ==================== 力量传奇 专属 Tab ====================
+    local MuscleLegendsTab = MainWindow:Tab({ Title = "力量传奇", Icon = "dumbbell" })
+    MuscleLegendsTab:Section({ Title = "脚本功能" })
+    MuscleLegendsTab:Button({
+        Title = "杯脚本",
+        Callback = function()
+            local success = pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/zuohongjian/bjb/main/llcq"))()
+            end)
+            WindUI:Notify({
+                Title = success and "加载成功" or "加载失败",
+                Content = success and "杯脚本已执行" or "脚本链接失效",
+                Duration = 3
+            })
+        end
+    })
+    MuscleLegendsTab:Button({
+        Title = "Speed Hub X",
+        Callback = function()
+            local success = pcall(function()
+                loadstring(game:HttpGetAsync("https://raw.githubusercontent.com/ahmadsgamer2/Script--Game/main/Muscle-Legends"))()
+            end)
+            WindUI:Notify({
+                Title = success and "加载成功" or "加载失败",
+                Content = success and "Speed Hub X 已执行" or "脚本链接失效",
+                Duration = 3
+            })
+        end
+    })
+    MuscleLegendsTab:Section({ Title = "快速传送" })
+    MuscleLegendsTab:Button({
+        Title = "出生点",
+        Callback = function()
+            local char = waitForCharacter()
+            if char then char.HumanoidRootPart.CFrame = CFrame.new(7, 3, 108) end
+        end
+    })
+    MuscleLegendsTab:Button({
+        Title = "冰霜健身房",
+        Callback = function()
+            local char = waitForCharacter()
+            if char then char.HumanoidRootPart.CFrame = CFrame.new(-2543, 13, -410) end
+        end
+    })
+    MuscleLegendsTab:Button({
+        Title = "神话健身房",
+        Callback = function()
+            local char = waitForCharacter()
+            if char then char.HumanoidRootPart.CFrame = CFrame.new(2177, 13, 1070) end
+        end
+    })
+
+    -- ==================== 忍者传奇 专属 Tab ====================
+    local NinjaLegendsTab = MainWindow:Tab({ Title = "忍者传奇", Icon = "shuriken" })
+    NinjaLegendsTab:Section({ Title = "自动功能" })
+    -- 自动挥舞（修复语法闭合+Delta适配）
+    NinjaLegendsTab:Toggle({
+        Title = "自动挥舞",
+        Default = false,
+        Callback = function(state)
+            Global.autoswingEnabled = state
+            if state then
+                spawn(function()
+                    while Global.autoswingEnabled do
+                        task.wait()
+                        if LocalPlayer:FindFirstChild("ninjaEvent") then
+                            LocalPlayer.ninjaEvent:FireServer("swingKatana")
+                        else
+                            Global.autoswingEnabled = false
+                            WindUI:Notify({ Title = "错误", Content = "未找到忍者传奇事件", Duration = 3 })
+                            break
+                        end
+                    end
+                end)
+                WindUI:Notify({ Title = "成功", Content = "自动挥舞已激活", Duration = 3 })
+            else
+                WindUI:Notify({ Title = "关闭", Content = "自动挥舞已关闭", Duration = 3 })
+            end
+        end
+    })
+
+    -- 自动售卖
+    local autosellEnabled = false
+    NinjaLegendsTab:Toggle({
+        Title = "自动售卖",
+        Default = false,
+        Callback = function(state)
+            autosellEnabled = state
+            if state then
+                spawn(function()
+                    while autosellEnabled do
+                        task.wait(0.1)
+                        local char = waitForCharacter()
+                        if char then
+                            local sellArea = game:GetService("Workspace"):FindFirstChild("sellAreaCircles")
+                            if sellArea and sellArea:FindFirstChild("sellAreaCircle7") then
+                                local circleInner = sellArea.sellAreaCircle7:FindFirstChild("circleInner")
+                                if circleInner then
+                                    circleInner.CFrame = char.HumanoidRootPart.CFrame
+                                    task.wait(0.1)
+                                    circleInner.CFrame = game:GetService("Workspace"):FindFirstChild("Part") and game:GetService("Workspace").Part.CFrame or char.HumanoidRootPart.CFrame
+                                end
+                            end
+                        end
+                    end
+                end)
+                WindUI:Notify({ Title = "成功", Content = "自动售卖已激活", Duration = 3 })
+            else
+                WindUI:Notify({ Title = "关闭", Content = "自动售卖已关闭", Duration = 3 })
+            end
+        end
+    })
+
+    -- ==================== Delta 专属保活逻辑（包含翻译功能） ====================
+    spawn(function()
+        while true do
+            task.wait(3)
+            -- 定期检查窗口和变量，避免 Delta 回收
+            if Global.MainWindow and not Global.MainWindow:IsVisible() then
+                Global.MainWindow:Show()
+            end
+            -- 角色重生后恢复属性
+            LocalPlayer.CharacterAdded:Connect(function(newChar)
+                task.wait(1)
+                local humanoid = newChar:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid.WalkSpeed = Global.currentWalkSpeed
+                    humanoid.JumpPower = Global.currentJumpPower
+                    if Global.godmodeEnabled then
+                        humanoid.MaxHealth = math.huge
+                        humanoid.Health = math.huge
+                    end
+                end
+                if Global.noclipConnection then
+                    for _, part in pairs(newChar:GetChildren()) do
+                        if part:IsA("BasePart") then part.CanCollide = false end
+                    end
+                end
+            end)
+            -- 翻译功能保活：确保连接不被回收
+            if Global.isTranslationEnabled and not Global.translationConnection then
+                Global.translationConnection = RunService.Heartbeat:Connect(function()
+                    if Global.isTranslationEnabled then
+                        scanAndTranslate()
+                        task.wait(Global.SCAN_INTERVAL)
+                    end
+                end)
+            end
+        end
+    end)
+
+    -- 加载成功通知
+    WindUI:Notify({
+        Title = "加载成功",
+        Content = "Delta 注入器适配完成，包含翻译功能",
+        Duration = 3
+    })
+end
