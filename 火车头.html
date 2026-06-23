@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>迪脚本与tubers93脚本 · 代码视界</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: default;
+            user-select: none;
+        }
+
+        :root {
+            --primary-cyan: #00d4ff;
+            --primary-green: #00ff88;
+            --teal: #00b894;
+            --dark-bg: #0a1e1f;
+            --glow-cyan: #00ffff;
+            --glow-green: #00ff88;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--dark-bg);
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+            color: #fff;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a1e1f 0%, #0f2e2a 25%, #0d2b3e 50%, #0f3a35 75%, #0a1e1f 100%);
+            z-index: -1;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+            100% { transform: perspective(500px) rotateX(60deg) translateY(50px); }
+        }
+
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 136, 0.01) 2px,
+                rgba(0, 255, 136, 0.01) 4px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .floating-orbs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.3) 0%, transparent 70%);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%);
+            top: 60%;
+            right: 15%;
+            animation-delay: -3s;
+        }
+
+        .orb-3 {
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 184, 148, 0.25) 0%, transparent 70%);
+            bottom: 20%;
+            left: 30%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.1); }
+            50% { transform: translate(-20px, 20px) scale(0.9); }
+            75% { transform: translate(20px, 30px) scale(1.05); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .logo-container {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 50%, #00b894 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(0, 255, 136, 0.5);
+            letter-spacing: 3px;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(0, 255, 136, 0.8)); }
+        }
+
+        .logo-decoration {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            bottom: -10px;
+            left: 0;
+            background: linear-gradient(90deg, transparent, #00ff88, #00d4ff, #00b894, transparent);
+            border-radius: 2px;
+            animation: lineGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes lineGlow {
+            0%, 100% { opacity: 0.5; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin-top: 15px;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+            position: relative;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+        }
+
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, rgba(0, 255, 136, 0.5), transparent);
+        }
+
+        .stat-item:last-child::after {
+            display: none;
+        }
+
+        .main-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .cyber-button {
+            position: relative;
+            padding: 20px 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(0, 255, 136, 0.2) 100%);
+            border: 2px solid rgba(0, 255, 136, 0.5);
+            border-radius: 15px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .cyber-button::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 13px;
+            padding: 2px;
+            background: linear-gradient(135deg, #00d4ff, #00ff88, #00d4ff);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cyber-button:hover::after {
+            opacity: 1;
+        }
+
+        .cyber-button:hover::before {
+            left: 100%;
+        }
+
+        .cyber-button:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 20px 40px rgba(0, 255, 136, 0.3),
+                0 0 60px rgba(0, 212, 255, 0.2),
+                inset 0 0 30px rgba(0, 212, 255, 0.1);
+            border-color: #00ff88;
+        }
+
+        .cyber-button:active {
+            transform: translateY(2px) scale(0.98);
+            transition: all 0.1s;
+        }
+
+        .cyber-button.primary {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.3) 0%, rgba(0, 184, 148, 0.3) 100%);
+            border-color: #00d4ff;
+        }
+
+        .cyber-button.secondary {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3) 0%, rgba(0, 128, 90, 0.3) 100%);
+            border-color: #00ff88;
+        }
+
+        .button-glow {
+            position: absolute;
+            inset: -2px;
+            border-radius: 17px;
+            background: linear-gradient(135deg, #00d4ff, #00ff88, #00d4ff);
+            opacity: 0;
+            filter: blur(15px);
+            z-index: -1;
+            transition: opacity 0.3s;
+            animation: buttonGlowRotate 3s linear infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes buttonGlowRotate {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .cyber-button:hover .button-glow {
+            opacity: 0.5;
+        }
+
+        .button-icon {
+            display: inline-block;
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.5), transparent);
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 184, 148, 0.1);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .panel-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2) 0%, rgba(0, 255, 136, 0.2) 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .panel-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #00ff88;
+        }
+
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, rgba(255, 255, 255, 0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .script-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-label {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .info-value {
+            color: #00ff88;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(34, 197, 94, 0.1) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.5);
+            border-radius: 20px;
+            color: #22c55e;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .guide-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .step-number {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .notice-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .notice-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border-left: 3px solid #00d4ff;
+            transition: all 0.3s ease;
+        }
+
+        .notice-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .notice-item.important {
+            border-left-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .notice-dot {
+            width: 8px;
+            height: 8px;
+            background: #00d4ff;
+            border-radius: 50%;
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .notice-item.important .notice-dot {
+            background: #ef4444;
+            animation: importantPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes importantPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .notice-text {
+            flex: 1;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .notice-time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 5px;
+        }
+
+        /* ---------- 全局提示 (成功/失败) ---------- */
+        .copy-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.95) 0%, rgba(22, 163, 74, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(34, 197, 94, 0.5);
+            border-radius: 60px;
+            padding: 22px 45px;
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px #22c55e55;
+        }
+
+        .copy-toast.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.6);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px #ef444488;
+        }
+
+        .copy-toast.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .copy-toast-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .copy-toast-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+
+        .copy-toast-icon svg {
+            width: 26px;
+            height: 26px;
+            fill: #fff;
+        }
+
+        .copy-toast-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        /* 点击涟漪等效果 */
+        .click-effect {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.6) 0%, transparent 70%);
+            transform: translate(-50%, -50%) scale(0);
+            animation: rippleEffect 0.8s ease-out forwards;
+        }
+
+        @keyframes rippleEffect {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+        }
+
+        .particle-burst {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #00ff88;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: particleBurst 0.8s ease-out forwards;
+        }
+
+        @keyframes particleBurst {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
+        }
+
+        .button-click-effect {
+            position: absolute;
+            inset: 0;
+            border-radius: 15px;
+            background: radial-gradient(circle at var(--x) var(--y), rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cyber-button.clicked .button-click-effect {
+            animation: buttonClickFlash 0.4s ease-out;
+        }
+
+        @keyframes buttonClickFlash {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        .wave-burst {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            border: 3px solid #00ff88;
+            border-radius: 15px;
+            transform: translate(-50%, -50%) scale(0.5);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .cyber-button.clicked .wave-burst {
+            animation: waveBurstEffect 0.6s ease-out;
+        }
+
+        @keyframes waveBurstEffect {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9rem;
+        }
+
+        .counter-animate {
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes counterJump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .counter-animate.jumping {
+            animation: counterJump 0.3s ease;
+        }
+
+        .online-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .online-dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px solid #22c55e;
+            border-radius: 50%;
+            animation: onlinePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes onlinePulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.5; }
+        }
+
+        .version-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, rgba(0, 184, 148, 0.3) 0%, rgba(0, 184, 148, 0.1) 100%);
+            border: 1px solid rgba(0, 184, 148, 0.5);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #2ed573;
+            margin-left: 10px;
+        }
+
+        /* 模态框 (代码视界) */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 22, 18, 0.8);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-container {
+            position: relative;
+            max-width: 700px;
+            width: 100%;
+            padding: 30px 25px 25px;
+            border-radius: 28px;
+            background: linear-gradient(145deg, rgba(10, 40, 35, 0.9) 0%, rgba(10, 30, 40, 0.95) 100%);
+            border: 1.5px solid rgba(0, 255, 136, 0.3);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,255,136,0.1) inset;
+            backdrop-filter: blur(20px);
+            transform: scale(0.98);
+            transition: transform 0.25s cubic-bezier(0.2,0.9,0.4,1);
+        }
+
+        .modal-overlay.show .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50%;
+            color: #a0ffd0;
+            font-size: 28px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(5px);
+            z-index: 5;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 255, 136, 0.25);
+            border-color: #00ff88;
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-right: 30px;
+            background: linear-gradient(135deg, #b0ffd4, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px #00b894;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 18px;
+            padding: 20px 18px;
+            margin-bottom: 30px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 8px 0 rgba(0,0,0,0.3);
+            backdrop-filter: blur(4px);
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #b3ffd9;
+            white-space: pre-wrap;
+            word-break: break-all;
+            text-shadow: 0 0 5px #00ff88;
+            user-select: text;
+            cursor: text;
+        }
+
+        .modal-copy-btn {
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.4rem;
+            padding: 18px 20px;
+            border-radius: 50px;
+            background: linear-gradient(145deg, #00cc6620, #00d4ff30);
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 25px #00ff8866;
+        }
+
+        .modal-copy-btn .button-icon {
+            font-size: 1.8rem;
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .stats-bar { gap: 30px; }
+            .main-buttons { flex-direction: column; align-items: center; }
+            .cyber-button { width: 100%; max-width: 300px; }
+            .content-grid { grid-template-columns: 1fr; }
+            .stat-item::after { display: none; }
+            .modal-container { padding: 25px 18px 20px; }
+            .modal-title { font-size: 1.8rem; }
+            .code-block pre { font-size: 0.95rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="grid-overlay"></div>
+    <canvas id="particles-canvas"></canvas>
+    <div class="floating-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="scanline"></div>
+
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <h1 class="logo">迪脚本与tubers93脚本</h1>
+                <div class="logo-decoration"></div>
+            </div>
+            <p class="subtitle">专业游戏脚本平台</p>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-number counter-animate" id="userCount">0</div>
+                    <div class="stat-label">使用用户</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number counter-animate" id="onlineCount">0</div>
+                    <div class="stat-label">
+                        <span class="online-indicator">
+                            <span class="online-dot"></span>
+                            在线人数
+                        </span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number counter-animate" id="runCount">0</div>
+                    <div class="stat-label">运行次数</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-buttons">
+            <button class="cyber-button primary" id="copyBtn">
+                <span class="button-glow"></span>
+                <span class="button-click-effect"></span>
+                <span class="wave-burst"></span>
+                <span class="button-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path d="M19 21H8V7H19M19 5H8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2Zm-3 14H9v-2h7v2Zm3-4H9V9h10v2Z"/>
+                    </svg>
+                </span>
+                脚本
+            </button>
+            <button class="cyber-button secondary" id="downloadBtn">
+                <span class="button-glow"></span>
+                <span class="button-click-effect"></span>
+                <span class="wave-burst"></span>
+                <span class="button-icon">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                        <path d="M19 9H15V3H9V9H5L12 16L19 9ZM5 18V20H19V18H5Z"/>
+                    </svg>
+                </span>
+                忍者注入器下载
+            </button>
+        </div>
+
+        <div class="content-grid">
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 9h-2v6h2v-6zm-4 6H7v-8h2v8zm6 0h-2v-2h2v2zm2-10V4l4 4h-4z"/></svg>
+                    </div>
+                    <h2 class="panel-title">脚本信息</h2>
+                </div>
+                <div class="script-info">
+                    <div class="info-row">
+                        <span class="info-label">脚本名称</span>
+                        <span class="info-value">迪脚本 & tubers93脚本</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">版本号</span>
+                        <span class="info-value">v2.4.1<span class="version-tag">STABLE</span></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">更新时间</span>
+                        <span class="info-value">2026-06-22</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">脚本状态</span>
+                        <span class="status-badge">正常运行</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    </div>
+                    <h2 class="panel-title">使用教程</h2>
+                </div>
+                <div class="guide-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">下载注入器</div>
+                            <div class="step-desc">点击下载忍者注入器并完成安装</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">复制脚本</div>
+                            <div class="step-desc">点击「脚本」按钮查看并复制代码</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">注入执行</div>
+                            <div class="step-desc">在注入器中粘贴代码并执行</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <div class="panel-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    </div>
+                    <h2 class="panel-title">公告通知</h2>
+                </div>
+                <div class="notice-list">
+                    <div class="notice-item important">
+                        <div class="notice-dot"></div>
+                        <div class="notice-content">
+                            <div class="notice-text">脚本已更新至v2.4.1版本，修复多处Bug，新增功能</div>
+                            <div class="notice-time">2026-06-22 22:30</div>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <div class="notice-dot"></div>
+                        <div class="notice-content">
+                            <div class="notice-text">请勿使用任何杀毒软件，可能导致注入失败</div>
+                            <div class="notice-time">2026-06-22 22:30</div>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <div class="notice-dot"></div>
+                        <div class="notice-content">
+                            <div class="notice-text">新用户建议先阅读使用教程</div>
+                            <div class="notice-time">2026-06-22 22:30</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p class="footer-text">迪脚本与tubers93脚本 - 让游戏更精彩</p>
+        </footer>
+    </div>
+
+    <!-- 代码模态框 -->
+    <div class="modal-overlay" id="scriptModal">
+        <div class="modal-container glass-panel">
+            <button class="modal-close" id="closeModalBtn" aria-label="关闭">&times;</button>
+            <h3 class="modal-title">⚡ 执行代码</h3>
+            <div class="code-block">
+                <pre id="scriptCodeDisplay">loadstring(game:HttpGet("https://raw.githubusercontent.com/xiaodi7598/-Q2/refs/heads/main/%E8%BF%AA%E8%84%9A%E6%9C%AC.lua"))()
+            </div>
+            <button class="cyber-button primary modal-copy-btn" id="modalCopyBtn">
+                <span class="button-glow"></span>
+                <span class="button-click-effect"></span>
+                <span class="wave-burst"></span>
+                <span class="button-icon">📋</span>
+                复制脚本
+            </button>
+        </div>
+    </div>
+
+    <!-- 全局提示 (支持成功/错误) -->
+    <div class="copy-toast" id="globalToast">
+        <div class="copy-toast-content">
+            <div class="copy-toast-icon" id="toastIcon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            </div>
+            <span class="copy-toast-text" id="toastMessage">复制成功</span>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            "use strict";
+
+            // ---------- 粒子系统 ----------
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let mouseX = 0, mouseY = 0;
+            let animationTime = 0;
+
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                reset() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.size = Math.random() * 3 + 1;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                    this.hue = Math.random() * 60 + 120;
+                    this.pulseSpeed = Math.random() * 0.02 + 0.01;
+                    this.pulseOffset = Math.random() * Math.PI * 2;
+                }
+                update(time) {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+                    this.opacity = 0.3 + Math.sin(time * this.pulseSpeed + this.pulseOffset) * 0.3;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = `hsla(${this.hue}, 100%, 60%, ${this.opacity})`;
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = `hsla(${this.hue}, 100%, 60%, ${this.opacity})`;
+                    ctx.fill();
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            const particleCount = Math.min(150, Math.floor((canvas.width * canvas.height) / 10000));
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+            function drawConnections() {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 150) {
+                            const opacity = (1 - distance / 150) * 0.2;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(0, 255, 136, ${opacity})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                    const dx = particles[i].x - mouseX;
+                    const dy = particles[i].y - mouseY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 200) {
+                        const opacity = (1 - distance / 200) * 0.3;
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(mouseX, mouseY);
+                        ctx.strokeStyle = `rgba(0, 212, 255, ${opacity})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                animationTime += 0.016;
+                particles.forEach(p => { p.update(animationTime); p.draw(); });
+                drawConnections();
+                requestAnimationFrame(animateParticles);
+            }
+            animateParticles();
+
+            document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+
+            // 点击涟漪
+            function createClickEffect(x, y) {
+                const ripple = document.createElement('div');
+                ripple.className = 'click-effect';
+                ripple.innerHTML = '<div class="ripple" style="width: 100px; height: 100px;"></div>';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                document.body.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 800);
+
+                for (let i = 0; i < 12; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'click-effect particle-burst';
+                    const angle = (i / 12) * Math.PI * 2;
+                    const distance = 80 + Math.random() * 40;
+                    const tx = Math.cos(angle) * distance + 'px';
+                    const ty = Math.sin(angle) * distance + 'px';
+                    particle.style.cssText = `left:${x}px; top:${y}px; --tx:${tx}; --ty:${ty}; background:hsl(${120+Math.random()*60},100%,60%);`;
+                    document.body.appendChild(particle);
+                    setTimeout(() => particle.remove(), 800);
+                }
+            }
+            document.addEventListener('click', (e) => { createClickEffect(e.clientX, e.clientY); });
+
+            // 计数器动画
+            function animateCounter(el, target, duration=2000) {
+                const start = 0;
+                const startTime = performance.now();
+                function update(now) {
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    const val = Math.floor(start + (target - start) * (1 - Math.pow(1 - progress, 3)));
+                    el.textContent = val.toLocaleString();
+                    if (progress < 1) requestAnimationFrame(update);
+                }
+                requestAnimationFrame(update);
+            }
+            setTimeout(() => {
+                animateCounter(document.getElementById('userCount'), 12847, 2500);
+                animateCounter(document.getElementById('onlineCount'), 342, 2000);
+                animateCounter(document.getElementById('runCount'), 985632, 3000);
+            }, 500);
+
+            // 按钮波纹变量
+            document.querySelectorAll('.cyber-button').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    btn.style.setProperty('--x', (e.clientX - rect.left) + 'px');
+                    btn.style.setProperty('--y', (e.clientY - rect.top) + 'px');
+                    btn.classList.add('clicked');
+                    setTimeout(() => btn.classList.remove('clicked'), 600);
+                });
+            });
+
+            // ---------- 模态框 & 复制逻辑 (优化版) ----------
+            const modal = document.getElementById('scriptModal');
+            const closeBtn = document.getElementById('closeModalBtn');
+            const copyMainBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const modalCopyBtn = document.getElementById('modalCopyBtn');
+            
+            // 全局toast元素
+            const toastEl = document.getElementById('globalToast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            const SCRIPT_CODE = `loadstring(game:HttpGet("https://raw.githubusercontent.com/xiaodi7598/-Q2/refs/heads/main/%E8%BF%AA%E8%84%9A%E6%9C%AC.lua"))()`;
+            
+            // 显示toast (type: 'success' 或 'error')
+            function showToast(type, message) {
+                // 重置类
+                toastEl.classList.remove('show', 'error');
+                // 设置内容
+                toastMessage.textContent = message;
+                
+                if (type === 'error') {
+                    toastEl.classList.add('error');
+                    toastIcon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>`;
+                } else {
+                    toastIcon.innerHTML = `<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>`;
+                }
+                
+                toastEl.classList.add('show');
+                setTimeout(() => {
+                    toastEl.classList.remove('show');
+                }, 2000);
+            }
+
+            // 核心复制函数
+            async function performCopy() {
+                try {
+                    await navigator.clipboard.writeText(SCRIPT_CODE);
+                    showToast('success', '复制成功');
+                    return true;
+                } catch (err) {
+                    // 降级方案
+                    try {
+                        const textarea = document.createElement('textarea');
+                        textarea.value = SCRIPT_CODE;
+                        textarea.style.position = 'fixed';
+                        textarea.style.opacity = '0';
+                        document.body.appendChild(textarea);
+                        textarea.select();
+                        const successful = document.execCommand('copy');
+                        document.body.removeChild(textarea);
+                        if (successful) {
+                            showToast('success', '复制成功');
+                            return true;
+                        } else {
+                            throw new Error('execCommand failed');
+                        }
+                    } catch (fallbackErr) {
+                        console.warn('复制失败: ', fallbackErr);
+                        showToast('error', '复制失败，请手动复制');
+                        return false;
+                    }
+                }
+            }
+
+            // 打开模态框
+            function openModal() {
+                modal.classList.add('show');
+                document.body.classList.add('modal-open');
+            }
+            function closeModal() {
+                modal.classList.remove('show');
+                document.body.classList.remove('modal-open');
+            }
+
+            // 主按钮「脚本」打开模态框
+            copyMainBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openModal();
+            });
+
+            // 下载注入器
+            downloadBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.open('https://deltaexploits.gg/', '_blank');
+            });
+
+            // 模态框内「复制脚本」
+            modalCopyBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                await performCopy();
+            });
+
+            // 关闭模态框
+            closeBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.classList.contains('show')) closeModal();
+            });
+
+            // 防止模态框内容点击关闭冒泡
+            document.querySelector('.modal-container').addEventListener('click', (e) => e.stopPropagation());
+
+            // 在线人数动态微调
+            setInterval(() => {
+                const onlineEl = document.getElementById('onlineCount');
+                if (!onlineEl) return;
+                const cur = parseInt(onlineEl.textContent.replace(/,/g, '')) || 342;
+                const change = Math.floor(Math.random() * 10) - 3;
+                const next = Math.max(100, cur + change);
+                animateCounter(onlineEl, next, 500);
+                onlineEl.classList.add('jumping');
+                setTimeout(() => onlineEl.classList.remove('jumping'), 300);
+            }, 5000);
+        })();
+    </script>
+</body>
+</html>
