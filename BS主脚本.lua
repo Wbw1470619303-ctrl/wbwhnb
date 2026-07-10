@@ -565,7 +565,62 @@ do
         })
     end)
 end
-local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
+-- 【修复1】安全加载 WindUI，防止 nil 被调用
+local WindUI = nil
+local uiLoadSuccess, uiLoadError = pcall(function()
+    -- 先尝试获取源码
+    local uiSource = game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua")
+    
+    -- 检查是否拿到了有效内容（GitHub 被墙或 404 时会返回 HTML，长度很短或包含 <html）
+    if not uiSource or type(uiSource) ~= "string" then
+        error("game:HttpGet 返回空值")
+    end
+    if #uiSource < 500 or uiSource:sub(1, 1) == "<" then
+        error("WindUI URL 返回了错误页面，不是 Lua 代码")
+    end
+    
+    -- 尝试编译
+    local compiledFunc = loadstring(uiSource)
+    if not compiledFunc then
+        error("loadstring 编译 WindUI 失败，源码可能有语法错误")
+    end
+    
+    -- 执行并获取返回值
+    local result = compiledFunc()
+    if not result then
+        error("WindUI 加载后返回 nil")
+    end
+    
+    WindUI = result
+end)
+
+if not uiLoadSuccess then
+    -- 加载失败时输出详细错误，并创建一个假 WindUI 防止后续代码崩溃
+    warn("【BS脚本】WindUI 加载失败，原因: " .. tostring(uiLoadError))
+    warn("【BS脚本】可能原因: ①网络被拦截 ②GitHub Raw 无法访问 ③注入器不支持 game:HttpGet")
+    
+    -- 创建一个占位对象，让脚本能继续跑，只是没有 UI
+    WindUI = {
+        CreateWindow = function()
+            warn("【BS脚本】UI 库未加载，窗口功能不可用")
+            -- 返回一个假 Window，里面的所有方法都返回空表，防止后续报错
+            local fakeTab = {}
+            fakeTab.section = function() return fakeTab end
+            fakeTab.Button = function() end
+            fakeTab.Toggle = function() end
+            fakeTab.Slider = function() end
+            fakeTab.Dropdown = function() end
+            fakeTab.Textbox = function() end
+            fakeTab.Label = function() end
+            
+            return {
+                Tab = function() return fakeTab end,
+                Notify = function() end
+            }
+        end
+    }
+end
+
 
 local plrs = game:GetService("Players")
 local me = plrs.LocalPlayer
@@ -11545,7 +11600,11 @@ general5:Button("时光回溯", function()
     RS:BindToRenderStep(name, 1, step)
 end)
 general5:Button("获取别人的道具", function()
-    for i,v in pairs (game.Players:GetChildren()) do
+    for-- 【修复2】补全被截断的代码（原代码不完整，这里给一个安全占位）
+general5:Button("获取别人的道具", function()
+    warn("获取道具功能暂未实现")
+end)
+ i,v in pairs (game.Players:GetChildren()) do
         wait()
         for i,b in pairs (v.Backpack:GetChildren()) do
             b.Parent = game.Players.LocalPlayer.Backpack
