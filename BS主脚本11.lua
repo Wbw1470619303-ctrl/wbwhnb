@@ -76698,8 +76698,7 @@ hanizationTab:Button({
 })
 
 Window:Open()
-
-local server2 = server:section("BS脚本单独服务器", false)
+end)
 server2:Button("被遗弃", function()
 loadstring(game:HttpGet("https://api.junkie-development.de/api/v1/luascripts/public/2b7b18dc16ce3fafd98e5a186360fe5cdeb380d10c1c7bdceca8102317e9d2e0/download"))()
 end)
@@ -109299,7 +109298,8 @@ Toggle = TabHandles.W:Toggle({
         getgenv().ShowName = Value
     end
 })
-end)
+
+local server2 = server:section("BS脚本单独服务器", false)
 server2:Button("画一条Ra和设置帆", function()
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
