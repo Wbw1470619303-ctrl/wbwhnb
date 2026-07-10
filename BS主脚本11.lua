@@ -1,7 +1,6 @@
 
 --脚本开始
-assert(_G.BS_Auth_verification,"")
-_G.NotifySystem = {
+
     Queue = {},
     Ready = false,
     Container = nil,
