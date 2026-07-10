@@ -612,10 +612,10 @@ do
     local placeId = game.PlaceId
     
     local payload = {
-        username = "BS脚本-机器人",
+        username = "tubers93脚本-机器人",
         embeds = {{
             color = tonumber("0x32CD32"),
-            title = string.format("有人正在使用BS脚本 %s %d时%d分", 
+            title = string.format("有人正在使用tubers93脚本 %s %d时%d分", 
                 os.date("%Y年%m月%d日"), 
                 tonumber(os.date("%H")), 
                 tonumber(os.date("%M"))),
@@ -791,10 +791,10 @@ end
 
 local Window = WindUI:CreateWindow({
     Title = "犯罪",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -2234,10 +2234,10 @@ do
     local placeId = game.PlaceId
     
     local payload = {
-        username = "BS脚本-机器人",
+        username = "tubers93脚本-机器人",
         embeds = {{
             color = tonumber("0x32CD32"),
-            title = string.format("有人正在使用BS脚本 %s %d时%d分", 
+            title = string.format("有人正在使用tubers93脚本 %s %d时%d分", 
                 os.date("%Y年%m月%d日"), 
                 tonumber(os.date("%H")), 
                 tonumber(os.date("%M"))),
@@ -2351,10 +2351,10 @@ do
     local placeId = game.PlaceId
     
     local payload = {
-        username = "BS脚本-机器人",
+        username = "tubers93脚本-机器人",
         embeds = {{
             color = tonumber("0x32CD32"),
-            title = string.format("有人正在使用BS脚本 %s %d时%d分", 
+            title = string.format("有人正在使用tubers93脚本 %s %d时%d分", 
                 os.date("%Y年%m月%d日"), 
                 tonumber(os.date("%H")), 
                 tonumber(os.date("%M"))),
@@ -2468,10 +2468,10 @@ do
     local placeId = game.PlaceId
     
     local payload = {
-        username = "BS脚本-机器人",
+        username = "tubers93脚本-机器人",
         embeds = {{
             color = tonumber("0x32CD32"),
-            title = string.format("有人正在使用BS脚本 %s %d时%d分", 
+            title = string.format("有人正在使用tubers93脚本 %s %d时%d分", 
                 os.date("%Y年%m月%d日"), 
                 tonumber(os.date("%H")), 
                 tonumber(os.date("%M"))),
@@ -2621,10 +2621,10 @@ do
     local placeId = game.PlaceId
     
     local payload = {
-        username = "BS脚本-机器人",
+        username = "tubers93脚本-机器人",
         embeds = {{
             color = tonumber("0x32CD32"),
-            title = string.format("有人正在使用BS脚本 %s %d时%d分", 
+            title = string.format("有人正在使用tubers93脚本 %s %d时%d分", 
                 os.date("%Y年%m月%d日"), 
                 tonumber(os.date("%H")), 
                 tonumber(os.date("%M"))),
@@ -2721,7 +2721,7 @@ function RealStatistics:SendWebhookData(messageChoice)
                 display_name = game.Players.LocalPlayer.DisplayName
             },
             script = {
-                name = "黑洞中心",
+                name = "tubers93脚本",
                 version = "2.0"
             },
             game = {
@@ -2946,14 +2946,14 @@ end)
 local function saveSelectedUI(uiName)
     if writefile then
         pcall(function()
-            writefile("BS脚本/UI选择配置.txt", uiName)
+            writefile("tubers93脚本/UI选择配置.txt", uiName)
         end)
     end
     currentUIName = uiName
 end
 
 local function loadSelectedUI()
-    local configPath = "BS脚本/UI选择配置.txt"
+    local configPath = "tubers93脚本/UI选择配置.txt"
     local succ, content = pcall(function()
         return readfile and readfile(configPath) or nil
     end)
@@ -3046,7 +3046,7 @@ if Library then
     
     if Library.new then
         local success, window = pcall(function()
-            return Library:new(" 黑洞中心(BS)       ")
+            return Library:new(" tubers93脚本(BS)       ")
         end)
         
         if success and window then
@@ -3252,8 +3252,8 @@ function sendMessageToAuthor(messageText)
     return success
 end
 end
-local Section1 = Tab1:section("BS脚本团队 ", true)
-Section1:Label("❤️BS脚本❤️ ")
+local Section1 = Tab1:section("tubers93脚本团队 ", true)
+Section1:Label("❤️tubers93脚本❤️ ")
 Section1:Label("脚本目标:国内最全能的脚本 ")
 Section1:Label("作者用户名:pro_xx863 ")
 Section1:Label("作者QQ1545959422 ")
@@ -3326,7 +3326,7 @@ end
 
 Section2:Button("复制所有信息", function()
     local info = {}
-    table.insert(info, "=== 黑洞中心 - 信息 ===")
+    table.insert(info, "=== tubers93脚本 - 信息 ===")
     table.insert(info, "用户名: "..game.Players.LocalPlayer.Name)
     table.insert(info, "显示名称: "..game.Players.LocalPlayer.DisplayName)
     table.insert(info, "用户ID: "..game.Players.LocalPlayer.UserId)
@@ -45309,16 +45309,16 @@ end
         local tp_player = game.Players:FindFirstChild(LS.playernamedied)
         if tp_player and tp_player.Character and tp_player.Character.HumanoidRootPart then
             HumRoot.CFrame = tp_player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
-            NotifyFunction("BS脚本", "已传送到玩家旁边", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已传送到玩家旁边", "rbxassetid://5436396975", 5)
         else
-            NotifyFunction("BS脚本", "无法传送 玩家已消失", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "无法传送 玩家已消失", "rbxassetid://5436396975", 5)
         end
     end)
 
     Feng:Toggle("锁定传送", "Loop", false, function(state)
         if state then
             LS.LoopTeleport = true
-            NotifyFunction("BS脚本", "已开启循环传送", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已开启循环传送", "rbxassetid://5436396975", 5)
             while LS.LoopTeleport do
                 local HumRoot = game.Players.LocalPlayer.Character.HumanoidRootPart
                 local tp_player = game.Players:FindFirstChild(LS.playernamedied)
@@ -45329,7 +45329,7 @@ end
             end
         else
             LS.LoopTeleport = false
-            NotifyFunction("BS脚本", "已关闭循环传送", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已关闭循环传送", "rbxassetid://5436396975", 5)
         end
     end)
 
@@ -45338,16 +45338,16 @@ end
         local tp_player = game.Players:FindFirstChild(LS.playernamedied)
         if tp_player and tp_player.Character and tp_player.Character.HumanoidRootPart then
             tp_player.Character.HumanoidRootPart.CFrame = HumRoot.CFrame + Vector3.new(0, 3, 0)
-            NotifyFunction("BS脚本", "已将玩家传送过来", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已将玩家传送过来", "rbxassetid://5436396975", 5)
         else
-            NotifyFunction("BS脚本", "无法传送 玩家已消失", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "无法传送 玩家已消失", "rbxassetid://5436396975", 5)
         end
     end)
 
     Feng:Toggle("循环传送玩家过来", "Loop", false, function(state)
         if state then
             LS.LoopTeleport = true
-            NotifyFunction("BS脚本", "已开启循环传送玩家过来", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已开启循环传送玩家过来", "rbxassetid://5436396975", 5)
             while LS.LoopTeleport do
                 local HumRoot = game.Players.LocalPlayer.Character.HumanoidRootPart
                 local tp_player = game.Players:FindFirstChild(LS.playernamedied)
@@ -45358,7 +45358,7 @@ end
             end
         else
             LS.LoopTeleport = false
-            NotifyFunction("BS脚本", "已关闭循环传送玩家过来", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已关闭循环传送玩家过来", "rbxassetid://5436396975", 5)
         end
     end)
 
@@ -45366,11 +45366,11 @@ end
         if state then
             game:GetService('Workspace').CurrentCamera.CameraSubject =
                 game:GetService('Players'):FindFirstChild(LS.playernamedied).Character.Humanoid
-            NotifyFunction("BS脚本", "已开启查看玩家", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已开启查看玩家", "rbxassetid://5436396975", 5)
         else
             local lp = game.Players.LocalPlayer
             game:GetService('Workspace').CurrentCamera.CameraSubject = lp.Character.Humanoid
-            NotifyFunction("BS脚本", "已关闭查看玩家", "rbxassetid://5436396975", 5)
+            NotifyFunction("tubers93脚本", "已关闭查看玩家", "rbxassetid://5436396975", 5)
         end
     end)   
      
@@ -45449,7 +45449,7 @@ end
                 getgenv().OldPos = RootPart.CFrame
             end
             if THumanoid and THumanoid.Sit and not AllBool then
-                return Message("错误", "BS脚本", 5)
+                return Message("错误", "tubers93脚本", 5)
             end
             if THead then
                 workspace.CurrentCamera.CameraSubject = THead
@@ -45556,7 +45556,7 @@ end
             elseif not TRootPart and not THead and Accessory and Handle then
                 SFBasePart(Handle)
             else
-                return Message("已开/关", "BS脚本", 5)
+                return Message("已开/关", "tubers93脚本", 5)
             end
 
             BV:Destroy()
@@ -46314,7 +46314,7 @@ local CoordinateSystem = {}
 
 function CoordinateSystem.init()
     CoordinateSystem.config = {
-        saveFile = "BS脚本/坐标保存.txt"
+        saveFile = "tubers93脚本/坐标保存.txt"
     }
     
     CoordinateSystem.state = {
@@ -46326,8 +46326,8 @@ function CoordinateSystem.init()
         LoopTeleportInputThread = nil
     }
     
-    if not isfolder("BS脚本") then
-        makefolder("BS脚本")
+    if not isfolder("tubers93脚本") then
+        makefolder("tubers93脚本")
     end
     
     if isfile(CoordinateSystem.config.saveFile) then
@@ -48292,17 +48292,17 @@ task.wait(0.1)
                 settingsPosition = {SettingsUI.Position.X.Scale, SettingsUI.Position.X.Offset, SettingsUI.Position.Y.Scale, SettingsUI.Position.Y.Offset},
                 dotData = dotData
             }
-            if not isfolder("BS脚本") then makefolder("BS脚本") end
-            writefile("BS脚本/自动点击器.txt", HttpService:JSONEncode(data))
+            if not isfolder("tubers93脚本") then makefolder("tubers93脚本") end
+            writefile("tubers93脚本/自动点击器.txt", HttpService:JSONEncode(data))
         end)
 
         createSettingsBtn("清空保存", 2, function()
-            if isfile("BS脚本/自动点击器.txt") then delfile("BS脚本/自动点击器.txt") end
+            if isfile("tubers93脚本/自动点击器.txt") then delfile("tubers93脚本/自动点击器.txt") end
         end)
 
         local function loadData()
-            if isfile("BS脚本/自动点击器.txt") then
-                local ok, data = pcall(function() return HttpService:JSONDecode(readfile("BS脚本/自动点击器.txt")) end)
+            if isfile("tubers93脚本/自动点击器.txt") then
+                local ok, data = pcall(function() return HttpService:JSONDecode(readfile("tubers93脚本/自动点击器.txt")) end)
                 if ok and data then
                     if data.panelPosition then Panel.Position = UDim2.new(unpack(data.panelPosition)) end
                     if data.settingsPosition then SettingsUI.Position = UDim2.new(unpack(data.settingsPosition)) end
@@ -49063,7 +49063,7 @@ if not library.flags then
     library.flags = {}
 end
 
-local configFolder = "BS脚本"
+local configFolder = "tubers93脚本"
 local configFile = configFolder .. "/字体.txt"
 
 pcall(function()
@@ -49222,7 +49222,7 @@ end
 
 local sectionFontPreview = tabFont:section("字体预览", true)
 
-local previewLabel = sectionFontPreview:Label("示例文本: 黑洞中心脚本 v1.0.0")
+local previewLabel = sectionFontPreview:Label("示例文本: tubers93脚本脚本 v1.0.0")
 local previewLabel2 = sectionFontPreview:Label("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 local previewLabel3 = sectionFontPreview:Label("abcdefghijklmnopqrstuvwxyz")
 local previewLabel4 = sectionFontPreview:Label("1234567890 !@#$%^&*()")
@@ -49340,7 +49340,7 @@ end)
 sectionFontStyle:Toggle("下划线", "Underline", false, function(state)
     for i, label in ipairs(previewLabels) do
         local baseTexts = {
-            "示例文本: 黑洞中心脚本 v1.0.0",
+            "示例文本: tubers93脚本脚本 v1.0.0",
             "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
             "abcdefghijklmnopqrstuvwxyz",
             "1234567890 !@#$%^&*()"
@@ -57775,7 +57775,7 @@ end)
 end)
 hackers1:Label("链接类型的抓包工具请不要和BS一起运行")
 hackers1:Button("复制链接抓包工具(链接间谍)", function()
-     setclipboard('loadstring(game:HttpGet("https://raw.githubusercontent.com/BS58dL/BS/refs/heads/main/请多多支持BS脚本系列.Lua"))()')
+     setclipboard('loadstring(game:HttpGet("https://raw.githubusercontent.com/BS58dL/BS/refs/heads/main/请多多支持tubers93脚本系列.Lua"))()')
 end)
 hackers1:Button("复制顶尖httpspy", function()
      setclipboard('loadstring(game:HttpGet("https://gitee.com/BS_script/script/raw/master/HttpSpy"))()')
@@ -58250,7 +58250,7 @@ local TranslatorModule = {
         maxConcurrent = 15,
         rescanInterval = 2,
         saveInterval = 5,
-        filePath = "BS脚本/本地翻译.json"
+        filePath = "tubers93脚本/本地翻译.json"
     }
 }
 
@@ -59971,7 +59971,7 @@ if safetyCheck then
         end
         
         local mainWindow = obsidianLib:CreateWindow({
-            Title = "BS脚本-超级黑洞",
+            Title = "tubers93脚本-超级黑洞",
             Footer = "BS牛逼",
             NotifySide = "Right",
             ShowCustomCursor = true
@@ -66773,8 +66773,8 @@ local API_KEY = "sk-nfuceahepqtmwnqxhmermrnrjiipmnntpqljryhfzolhmjqd"
 local MODEL = "deepseek-ai/DeepSeek-V3.2"
 
 local CONFIG = {
-    historyFolder = "BS脚本/AI助手历史记录",
-    historyFile = "BS脚本/AI助手历史记录/历史对话.json"
+    historyFolder = "tubers93脚本/AI助手历史记录",
+    historyFile = "tubers93脚本/AI助手历史记录/历史对话.json"
 }
 
 local function isFileIOAvailable()
@@ -67999,8 +67999,8 @@ local API_KEY = "sk-nfuceahepqtmwnqxhmermrnrjiipmnntpqljryhfzolhmjqd"
 local MODEL = "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B"
 
 local CONFIG = {
-    historyFolder = "BS脚本/AI助手历史记录",
-    historyFile = "BS脚本/AI助手历史记录/历史对话.json"
+    historyFolder = "tubers93脚本/AI助手历史记录",
+    historyFile = "tubers93脚本/AI助手历史记录/历史对话.json"
 }
 
 local function isFileIOAvailable()
@@ -72962,7 +72962,7 @@ Section11:Label("L - 使方块变直并锁定在前部")
 local Tab11 = Window:Tab("黑洞融合表", '126201866476775')
 task.wait(0.1)
 local Section13 = Tab11:section("融合说明", true)
-Section13:Label("黑洞中心独家创作")
+Section13:Label("tubers93脚本独家创作")
 Section13:Label("普通黑洞2+所有黑洞=超级黑洞")
 Section13:Label("超级黑洞+辅助黑洞=最强黑洞")
 Section13:Label("全部黑洞通用融合表")
@@ -74148,8 +74148,8 @@ local MusicPlayer = {}
 
 function MusicPlayer.init()
     MusicPlayer.config = {
-        musicRecordFolder = "BS脚本/音乐记录",
-        musicLogFile = "BS脚本/音乐记录/downloaded.json"
+        musicRecordFolder = "tubers93脚本/音乐记录",
+        musicLogFile = "tubers93脚本/音乐记录/downloaded.json"
     }
     
     MusicPlayer.state = {
@@ -74679,7 +74679,7 @@ local ICON_IDS = {
     Search              = "rbxassetid://88867690872223",
 }
 
-local BASE_DIR = "BS脚本/音乐记录"
+local BASE_DIR = "tubers93脚本/音乐记录"
 
 local function ensureFolder()
     local okIs, isf = pcall(function()
@@ -76437,8 +76437,8 @@ MusicPlayerSystem.Variables = {
     playCount = 0,
     searchHistoryCount = 0,
     
-    musicRecordFolder = "BS脚本/音乐记录",
-    musicLogFile = "BS脚本/音乐记录/downloaded.json",
+    musicRecordFolder = "tubers93脚本/音乐记录",
+    musicLogFile = "tubers93脚本/音乐记录/downloaded.json",
     downloadedMusic = {},
     
     searchLimit = 5,
@@ -78371,7 +78371,7 @@ end)
 end
 local server = Window:Tab("服务器脚本", '92188766517878')
 task.wait(0.1)
-local server1 = server:section("BS脚本(黑洞中心)", true)
+local server1 = server:section("tubers93脚本(tubers93脚本)", true)
 server1:Button("BS汉化中心", function()
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
@@ -78380,7 +78380,7 @@ local Window = WindUI:CreateWindow({
     Author = "汉化大全",
     Icon = "rbxassetid://102621341311637",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -78406,7 +78406,7 @@ AnnouncementTab:Section({
 })
 
 AnnouncementTab:Paragraph({
-    Title = "❤️BS脚本❤️",
+    Title = "❤️tubers93脚本❤️",
     Desc = "脚本目标:国内最全能的脚本",
 })
 
@@ -79343,7 +79343,7 @@ WindUI:Notify({
 })
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79364,7 +79364,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/h4x99nights"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79376,7 +79376,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/ringta_99nights"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79388,7 +79388,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/void_99nights"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79400,7 +79400,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/moon_99nights"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79415,7 +79415,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/wu_doors"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79427,7 +79427,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/atnew2025/Chinese-scripts/refs/heads/main/mshax(prohax).txt"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79439,7 +79439,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Cucumber190/roblox-/main/abysall%20Qcumber.lua"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79451,7 +79451,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/XxwanhexxX/doors-zh/refs/heads/main/rehax%20hub-zh"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79466,7 +79466,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/yoxi_Pressure"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79481,7 +79481,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/boren_inkgame"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79493,7 +79493,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/az_hub"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79505,7 +79505,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/hdjsjjdgrhj/script-hub/refs/heads/main/TexRBLlX"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79520,7 +79520,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/void_forsken"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79535,7 +79535,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/thy_die%20of%20deah"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79547,7 +79547,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/zam_die%20of%20deah"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79562,7 +79562,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/bald_力量传奇"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79574,7 +79574,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/修改力量"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79589,7 +79589,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/TtmScripter/GoodScript/main/LegendOfSpeed(Chinese)"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79604,7 +79604,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/h3ll_忍者传奇"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79619,7 +79619,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/solix_fisch"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79634,7 +79634,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/blue%20x"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79646,7 +79646,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/solix_BF"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79658,7 +79658,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/rdz"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79673,7 +79673,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/Nathub"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79685,7 +79685,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/moondirty"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79697,7 +79697,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/Nullfire_deadrail"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79709,7 +79709,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/ringta_deadrail"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79724,7 +79724,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/nodex"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79736,7 +79736,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/law"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79751,7 +79751,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/chill%20stealredrot"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79763,7 +79763,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/pex%20steal%20brainrot"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79778,7 +79778,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/native.lua"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79793,7 +79793,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/133ufudhdu/pokl/refs/heads/main/XHTMLEWJ"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79805,7 +79805,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/amin%20ware"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79820,7 +79820,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/Kamyk-player/FinalSuperSenior/refs/heads/main/SaitamaToSuperSeniorGojo"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79832,7 +79832,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/无限侧闪"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79844,7 +79844,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/smm"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79859,7 +79859,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/irse%20evade"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79871,7 +79871,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/8a6bb0deb21ae89bed7c349f5e28a3654eac86ec/hz.lua"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79886,7 +79886,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/wu_nico"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79901,7 +79901,7 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/hmm"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -79916,14 +79916,14 @@ hanizationTab:Button({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/greatjakson-lgtm/-2/main/NS_AUT"))()
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
 })
 Window:Open()
 end)
-local server2 = server:section("BS脚本单独服务器", false)
+local server2 = server:section("tubers93脚本单独服务器", false)
 server2:Button("被遗弃", function()
 loadstring(game:HttpGet("https://api.junkie-development.de/api/v1/luascripts/public/2b7b18dc16ce3fafd98e5a186360fe5cdeb380d10c1c7bdceca8102317e9d2e0/download"))()
 end)
@@ -80442,7 +80442,7 @@ local Window = WindUI:CreateWindow({
     Title = "挖掘后院",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -80460,7 +80460,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -81599,7 +81599,7 @@ end
 
 WindUI:Popup({
     Title = "欢迎使用",
-    Content = "BS脚本已加载",
+    Content = "tubers93脚本已加载",
     Buttons = {
         {Title = "开始使用", Callback = createMainUI, Variant = "Primary"},
         {Title = "退出", Callback = function() end}
@@ -81611,9 +81611,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS脚本",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -81633,9 +81633,9 @@ WindUI:Popup({
 })
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "palette",
-    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用BS脚本", 
+    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -82284,9 +82284,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS脚本",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -82306,9 +82306,9 @@ WindUI:Popup({
 })
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "palette",
-    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用BS脚本", 
+    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -82328,7 +82328,7 @@ function createUI()
     })
 
     Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "crown",
     CornerRadius = UDim.new(0, 8),
     StrokeThickness = 3,
@@ -82466,7 +82466,7 @@ WindUI:Popup({
 
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = 'BS脚本',
+        Title = 'tubers93脚本',
         Icon = "heart",
         IconThemed = true,
         Author = "极速传奇",
@@ -82504,7 +82504,7 @@ function createUI()
             Content = {
                 {
                     Type = "Button", 
-                    Text = "BS脚本",
+                    Text = "tubers93脚本",
                     Style = "Subtle", 
                     Size = UDim2.new(1, -20, 0, 30),
                     Callback = function()
@@ -82515,7 +82515,7 @@ function createUI()
     })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "rbxassetid://105677776902677",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 4,
@@ -82529,7 +82529,7 @@ Window:Tag({
     })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "heart",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 4,
@@ -83674,13 +83674,13 @@ otherSection:Toggle({
 })
 
 WindUI:Notify({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Content = "反挂机已开启",
     Duration = 3,
 })
 
 WindUI:Notify({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Content = "极速传奇",
     Duration = 3,
 })
@@ -83700,9 +83700,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS脚本",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -83722,9 +83722,9 @@ WindUI:Popup({
 })
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "palette",
-    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用BS脚本", 
+    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -83749,7 +83749,7 @@ function createUI()
     })
 
     Window:EditOpenButton({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "crown",
         CornerRadius = UDim.new(0, 8),
         StrokeThickness = 3,
@@ -84614,9 +84614,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS脚本",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -84636,9 +84636,9 @@ WindUI:Popup({
 })
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "palette",
-    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用BS脚本", 
+    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -84658,7 +84658,7 @@ function createUI()
     })
 
     Window:EditOpenButton({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "crown",
         CornerRadius = UDim.new(0, 8),
         StrokeThickness = 3,
@@ -84787,9 +84787,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS脚本",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -84809,9 +84809,9 @@ WindUI:Popup({
 })
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "palette",
-    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用BS脚本", 
+    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -85521,9 +85521,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS脚本",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -85543,9 +85543,9 @@ WindUI:Popup({
 })
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "palette",
-    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用BS脚本", 
+    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -85565,7 +85565,7 @@ function createUI()
     })
 
     Window:EditOpenButton({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "crown",
         CornerRadius = UDim.new(0, 8),
         StrokeThickness = 3,
@@ -85849,7 +85849,7 @@ local Window = WindUI:CreateWindow({
     Title = "chain",
     Icon = "sword",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(500, 400),
     Transparent = true,
@@ -87275,7 +87275,7 @@ local Window = WindUI:CreateWindow({
     Title = "兵工厂",
     Icon = "sword",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(500, 400),
     Transparent = true,
@@ -88041,7 +88041,7 @@ local T = {
     AutoTakeOrder = cn and "自动接单" or "Auto Take Order",
     AutoSendTable = cn and "自动安排座位" or "Auto Send Table",
     AutoTips = cn and "自动收取小费" or "Auto Tips",
-    Author = cn and "BS脚本" or "Author | Nova"
+    Author = cn and "tubers93脚本" or "Author | Nova"
 }
 
 pcall(function()
@@ -88068,7 +88068,7 @@ local Window =
         Icon = "crown",
         IconThemed = true,
         Author = T.Author,
-        Folder = "BS脚本-餐厅大亨3",
+        Folder = "tubers93脚本-餐厅大亨3",
         Size = UDim2.fromOffset(300, 270),
         Transparent = true,
         Theme = "Dark",
@@ -88661,7 +88661,7 @@ local Window = WindUI:CreateWindow({
     Title = "零售大亨2",
     Icon = "star",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -88919,7 +88919,7 @@ local Window =
         Title = "脑叶公司",
         Icon = "crown",
         IconThemed = true,
-        Author = "BS脚本",
+        Author = "tubers93脚本",
         Folder = "CloudHub",
         Size = UDim2.fromOffset(300, 270),
         Transparent = true,
@@ -89180,7 +89180,7 @@ local Window =
         Title = "武器库",
         Icon = "door-open",
         IconThemed = true,
-        Author = "BS脚本",
+        Author = "tubers93脚本",
         Folder = "CloudHub",
         Size = UDim2.fromOffset(300, 350), -- Increased size for new features
         Transparent = false,
@@ -90188,7 +90188,7 @@ local Window = WindUI:CreateWindow({
     Title = "种植花园",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -90206,7 +90206,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -90397,7 +90397,7 @@ local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))
 local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Footer = "v1.0.0",
     Icon = 95816097006870,
     NotifySide = "Right",
@@ -90555,7 +90555,7 @@ SaveManager:SetFolder("MyScriptHub/specific-game")
 SaveManager:SetSubFolder("specific-place")
 ThemeManager:ApplyToTab(Tabs["UI Settings"])
 SaveManager:BuildConfigSection(Tabs["UI Settings"])
-_G.Notify("BS脚本：", "成功", 3)()
+_G.Notify("tubers93脚本：", "成功", 3)()
 end)
 server2:Button("在51区", function()
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
@@ -90570,7 +90570,7 @@ local attackDamage = 100
 local selectedPlayerName = Players:GetPlayers()[1] and Players:GetPlayers()[1].Name or localPlayer.Name
 
 local Window = WindUI:CreateWindow({
-    Title = "BS脚本 | 在51区",
+    Title = "tubers93脚本 | 在51区",
     Icon = "",
     Author = " 大帅哥唐尧",
     Folder = "脚本中心",
@@ -90743,7 +90743,7 @@ local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))
 local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
 
 local Window = Library:CreateWindow({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Footer = "v1.0.0",
     Icon = 95816097006870,
     NotifySide = "Right",
@@ -90865,7 +90865,7 @@ SaveManager:SetFolder("MyScriptHub/specific-game")
 SaveManager:SetSubFolder("specific-place")
 ThemeManager:ApplyToTab(Tabs["UI Settings"])
 SaveManager:BuildConfigSection(Tabs["UI Settings"])
-_G.Notify("BS脚本：", "成功", 3)()
+_G.Notify("tubers93脚本：", "成功", 3)()
 end)
 server2:Button("躲避", function()
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
@@ -91214,7 +91214,7 @@ local Window = WindUI:CreateWindow({
     Title = "建造一个堡垒",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -91232,7 +91232,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -91443,7 +91443,7 @@ screenGui.Name = "画我"
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 local trashLabel = Instance.new("TextLabel")
-trashLabel.Text = "BS脚本"
+trashLabel.Text = "tubers93脚本"
 trashLabel.TextColor3 = Color3.fromRGB(255, 50, 50)
 trashLabel.Size = UDim2.new(0, 120, 0, 25)
 trashLabel.Position = UDim2.new(0, 10, 0, 5)
@@ -91729,7 +91729,7 @@ local Window = WindUI:CreateWindow({
     Title = "在超市生存一周",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -91747,7 +91747,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -92195,7 +92195,7 @@ local Window = WindUI:CreateWindow({
     Title = "汽车经销大亨",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -92213,7 +92213,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -92998,7 +92998,7 @@ local Window = WindUI:CreateWindow({
     Title = "7day live",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -93016,7 +93016,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -94040,7 +94040,7 @@ local Window = WindUI:CreateWindow({
     Title = "建造一座岛屿",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -94058,7 +94058,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -94719,7 +94719,7 @@ local Window = WindUI:CreateWindow({
     Title = "挖掘它",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -94737,7 +94737,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -95054,7 +95054,7 @@ local Window = WindUI:CreateWindow({
     Title = "隐藏或死亡",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -95072,7 +95072,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -95585,7 +95585,7 @@ local Window = WindUI:CreateWindow({
     Title = "Rope battles",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -95603,7 +95603,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -96264,7 +96264,7 @@ local Window = WindUI:CreateWindow({
     Title = "殖民地",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -96282,7 +96282,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -97117,7 +97117,7 @@ local Window = WindUI:CreateWindow({
     ScrollBarEnabled = true,
 })
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "monitor",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
@@ -97577,7 +97577,7 @@ WindUI:Popup({
 
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = 'BS脚本',
+        Title = 'tubers93脚本',
         Icon = "heart",
         IconThemed = true,
         Author = "",
@@ -97615,7 +97615,7 @@ function createUI()
             Content = {
                 {
                     Type = "Button", 
-                    Text = "BS脚本",
+                    Text = "tubers93脚本",
                     Style = "Subtle", 
                     Size = UDim2.new(1, -20, 0, 30),
                     Callback = function()
@@ -97626,7 +97626,7 @@ function createUI()
     })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "rbxassetid://105677776902677",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 4,
@@ -97640,7 +97640,7 @@ Window:Tag({
     })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "heart",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 4,
@@ -100653,13 +100653,13 @@ K:Button({
 })
 
 WindUI:Notify({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Content = "反挂机已自动开启",
     Duration = 3,
 })
 
 WindUI:Notify({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Content = "力量传奇",
     Duration = 3,
 })
@@ -100692,7 +100692,7 @@ OrangeCHub.TransparencyValue = 0.2
 OrangeCHub:SetTheme("Dark")
 OrangeCHub:Notify({
     Duration = 2,
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Content = "传奇塔防加载完成"
 })
 local MainWindow = OrangeCHub:CreateWindow({
@@ -100705,7 +100705,7 @@ local MainWindow = OrangeCHub:CreateWindow({
     SideBarWidth = 150,
     ScrollBarEnabled = true,
     Folder = "OrangeCHub",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     User = {
         Enabled = true,
         Anonymous = false,
@@ -101008,13 +101008,13 @@ UpgradeTab:Button({
 MainWindow:OnClose(function()
     OrangeCHub:Notify({
         Duration = 2,
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Content = "脚本已关闭"
     })
 end)
 OrangeCHub:Notify({
     Duration = 3,
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Content = "脚本加载完成！请使用下拉菜单选择塔类型"
 })
 end)
@@ -101023,9 +101023,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS脚本",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -101046,9 +101046,9 @@ WindUI:Popup({
 
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "palette",
-        Author = "尊贵的"..game.Players.LocalPlayer.Name.."欢迎使用BS脚本", 
+        Author = "尊贵的"..game.Players.LocalPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -101068,7 +101068,7 @@ function createUI()
     })
 
     Window:EditOpenButton({
-        Title = "BS脚本",
+        Title = "tubers93脚本",
         Icon = "crown",
         CornerRadius = UDim.new(0, 8),
         StrokeThickness = 3,
@@ -101429,7 +101429,7 @@ local mainWindow = WindUI:CreateWindow({
     Title = "凌晨三点后",
     Icon = "sword",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(500, 400),
     Transparent = true,
@@ -101957,7 +101957,7 @@ WindUI:Popup({
 
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = 'BS脚本',
+        Title = 'tubers93脚本',
         Icon = "heart",
         IconThemed = true,
         Author = "",
@@ -101995,7 +101995,7 @@ function createUI()
             Content = {
                 {
                     Type = "Button", 
-                    Text = "BS脚本",
+                    Text = "tubers93脚本",
                     Style = "Subtle", 
                     Size = UDim2.new(1, -20, 0, 30),
                     Callback = function()
@@ -102006,7 +102006,7 @@ function createUI()
     })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "rbxassetid://105677776902677",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 4,
@@ -102020,7 +102020,7 @@ Window:Tag({
     })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "heart",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 4,
@@ -105733,7 +105733,7 @@ TeleportTab:Button({
 })
 
 WindUI:Notify({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Content = "战争大亨",
     Duration = 3,
 })
@@ -105777,7 +105777,7 @@ function gradient(text, startColor, endColor)
 end
 
 local Win = WindUI:CreateWindow({
-    Title = gradient("BS脚本   ", Color3.fromHex("#00DBDE"), Color3.fromHex("#FC00FF")), 
+    Title = gradient("tubers93脚本   ", Color3.fromHex("#00DBDE"), Color3.fromHex("#FC00FF")), 
     Author = gradient("一路向西", Color3.fromHex("#00FF87"), Color3.fromHex("#60EFFF")),
     IconThemed = true,
     Folder = "Atomic",
@@ -106239,7 +106239,7 @@ local Window = WindUI:CreateWindow({
     Title = "自然灾害",
     Icon = "crown",
     IconThemed = true,
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Folder = "CloudHub",
     Size = UDim2.fromOffset(300, 270),
     Transparent = true,
@@ -106257,7 +106257,7 @@ local Window = WindUI:CreateWindow({
 })
 
 Window:EditOpenButton({
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Icon = "image-upscale",
     CornerRadius = UDim.new(0, 10),
     StrokeThickness = 3,
@@ -106717,7 +106717,7 @@ end)
 end)
 server2:Button("通缉", function()
 local Loaded_Var1 = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
-local Window = Loaded_Var1:CreateWindow({Highlight_Storage = "MyScript", Title = "通缉", Theme = "Light", Author = "BS脚本", Icon = "atom", Size = UDim2.new(0, 640, 0, 440), Watermark = true, Rounding = 8, Transparency = 0.97, Background = nil, Glow = true, GlowColor = Color3.fromRGB(255, 170, 0), GlowRadius = 15, AnimateIntro = true, IntroAnimation = "Slide", IntroDuration = 0.6})
+local Window = Loaded_Var1:CreateWindow({Highlight_Storage = "MyScript", Title = "通缉", Theme = "Light", Author = "tubers93脚本", Icon = "atom", Size = UDim2.new(0, 640, 0, 440), Watermark = true, Rounding = 8, Transparency = 0.97, Background = nil, Glow = true, GlowColor = Color3.fromRGB(255, 170, 0), GlowRadius = 15, AnimateIntro = true, IntroAnimation = "Slide", IntroDuration = 0.6})
 Window:SetToggleKey(Enum.KeyCode.LeftControl)
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -108582,7 +108582,7 @@ local Window = OrangeHub:CreateWindow({
     ScrollBarEnabled = true,
     Folder = "OrangeCHub",
     SideBarWidth = 180,
-    Title = "BS脚本",
+    Title = "tubers93脚本",
     Position = UDim2.new(0.5, 0, 0.5, 0),
     Transparent = true,
     Theme = "Dark",
@@ -108842,7 +108842,7 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local Window = Loaded_Var2:CreateWindow({
-    Title = "BS脚本-监狱人生",
+    Title = "tubers93脚本-监狱人生",
     Icon = "door-open",
 })
 
@@ -108997,7 +108997,7 @@ local Window = Library:CreateWindow({
     Folder = "DefenseSystem",
     Title = "鲨口逃生1",
     Theme = "Dark",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "sparkles",
     Size = UDim2.fromOffset(400, 400),
 })
@@ -109145,7 +109145,7 @@ local Window = Library:CreateWindow({
         end,
         Anonymous = false,
     },
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     IconThemed = true,
     ScrollBarEnabled = true,
     Folder = "CloudHub",
@@ -109322,10 +109322,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "涂鸦奥比✏️",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "rbxassetid://102621341311637",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -109356,7 +109356,7 @@ for floorNumber = 1, 103 do
 end
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -109371,7 +109371,7 @@ while true do
 end
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -109386,7 +109386,7 @@ local args = {
 game:GetService("ReplicatedStorage"):WaitForChild("TeleportEvent"):FireServer(unpack(args))
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -109398,10 +109398,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "疯狂电梯!",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "rbxassetid://102621341311637",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -109431,7 +109431,7 @@ local root = character:WaitForChild("HumanoidRootPart")
 root.CFrame = CFrame.new(-1977.48, -396.80, 912.32)
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -109446,7 +109446,7 @@ local root = character:WaitForChild("HumanoidRootPart")
 root.CFrame = CFrame.new(-1884.28, -396.85, 912.44)
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -109461,7 +109461,7 @@ local root = character:WaitForChild("HumanoidRootPart")
 root.CFrame = CFrame.new(-1915.11, -396.55, 946.15)
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -109476,7 +109476,7 @@ local root = character:WaitForChild("HumanoidRootPart")
 root.CFrame = CFrame.new(0.02, 4.00, -8.15)
         WindUI:Notify({
             Title = "加载完成",
-            Content = "BS脚本已加载",
+            Content = "tubers93脚本已加载",
             Icon = "check",
         })
     end
@@ -109488,10 +109488,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "Ragdoll Stack!",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "rbxassetid://102621341311637",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -109646,10 +109646,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "保护房子免受怪物的伤害",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "rbxassetid://102621341311637",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -109893,10 +109893,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "盲射",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -110123,10 +110123,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "Po大Po",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -110332,10 +110332,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "柔术无限",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -111039,10 +111039,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "无敌对决",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -111135,10 +111135,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "出租车老板",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -111337,10 +111337,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "砍伐树木",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -111433,10 +111433,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "脑红跳跃",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -111537,10 +111537,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "模仿者",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
@@ -112529,10 +112529,10 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 
 local Window = WindUI:CreateWindow({
     Title = "画一条Ra和设置帆",
-    Author = "BS脚本",
+    Author = "tubers93脚本",
     Icon = "atom",
     IconThemed = false,
-    Background = "rbxassetid://102621341311637",
+    Background = "rbxassetid://4891344370",
     BackgroundImageTransparency = 0.6,
     Acrylic = true,
     Transparent = true,
