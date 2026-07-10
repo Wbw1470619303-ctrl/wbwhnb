@@ -91,9 +91,7 @@ return BS_ProtectedExecute(function(...)
     end
 
     local function BS_coreLogic()
---脚本开始
-assert(_G.BS_Auth_verification,"")
-_G.NotifySystem = {
+
     Queue = {},
     Ready = false,
     Container = nil,
@@ -109474,12 +109472,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/1379qpalzmtygvezimali
 --结束
     end
 
-    local function BS_safeEntry()
-        if not BS_probeArith() then return nil, "block:arith" end
-        if not BS_probeCall()  then return nil, "block:call"  end
-        if not BS_probeFS()    then return nil, "block:fs"    end
+        local function BS_safeEntry()
+        -- 这三行是防御检测，免费执行器通常会在这里被拦截
+        -- if not BS_probeArith() then return nil, "block:arith" end
+        -- if not BS_probeCall()  then return nil, "block:call"  end
+        -- if not BS_probeFS()    then return nil, "block:fs"    end
         return BS_coreLogic()
     end
+
 
     local BS_success, BS_tag = BS_safeEntry()
     if not BS_success then
