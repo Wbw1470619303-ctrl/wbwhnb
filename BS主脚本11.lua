@@ -1,5 +1,15 @@
 
 --脚本开始
+--脚本开始
+
+-- 添加自定义表计数函数（因为 tableCount 在 Roblox 中不存在）
+local function tableCount(t)
+    local count = 0
+    for _ in pairs(t) do
+        count = count + 1
+    end
+    return count
+end
 
     Queue = {},
     Ready = false,
@@ -56362,7 +56372,7 @@ local function ultraFastTranslateGuiElements()
         end
     end
     
-    if table.count(translatedCache) > MAX_CACHE_SIZE then
+    if tableCount(translatedCache) > MAX_CACHE_SIZE then
         local newCache = {}
         local i = 0
         for k, v in pairs(translatedCache) do
@@ -56596,7 +56606,7 @@ end)
 local function cleanupMemory()
     collectgarbage("collect")
     
-    if table and table.count and table.count(translatedCache) > MAX_CACHE_SIZE then
+    if table and tableCount and tableCount(translatedCache) > MAX_CACHE_SIZE then
         local newCache = {}
         local i = 0
         for k, v in pairs(translatedCache) do
@@ -76110,7 +76120,7 @@ local function ultraFastTranslateGuiElements()
         end
     end
     
-    if table.count(translatedCache) > MAX_CACHE_SIZE then
+    if tableCount(translatedCache) > MAX_CACHE_SIZE then
         local newCache = {}
         local i = 0
         for k, v in pairs(translatedCache) do
@@ -76344,7 +76354,7 @@ end)
 local function cleanupMemory()
     collectgarbage("collect")
     
-    if table and table.count and table.count(translatedCache) > MAX_CACHE_SIZE then
+    if table and tableCount and tableCount(translatedCache) > MAX_CACHE_SIZE then
         local newCache = {}
         local i = 0
         for k, v in pairs(translatedCache) do
