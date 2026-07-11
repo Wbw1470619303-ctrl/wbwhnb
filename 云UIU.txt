@@ -58718,7 +58718,7 @@ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/rel
 task.wait(2)
 
 WindUI:Notify({
-    Title = "BS",
+    Title = "tubers93",
     Content = "UI翻译已完成加载过程",
     Duration = 4
 })
@@ -58736,7 +58736,7 @@ local Window = WindUI:CreateWindow({
     Title = "自动翻译V2",
     Icon = "rbxassetid://4483362748",
     IconTransparency = 1,
-    Author = "BS 自动翻译",
+    Author = "tubers96 自动翻译",
     Folder = "Translator",
     Size = UDim2.fromOffset(100, 150),
     Transparent = true,
@@ -58764,7 +58764,7 @@ local Window = WindUI:CreateWindow({
 task.wait(0.3)
 
 Window:EditOpenButton({
-    Title = "BS翻译",
+    Title = "tubers93翻译",
     Icon = "crown",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
