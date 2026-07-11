@@ -2916,7 +2916,7 @@ local UISelector = {
 }
 
 local UIUrls = {
-    ["灵动岛UI"]    = "https://gitee.com/BS_script/script/raw/master/Dynamic_Island",
+    ["灵动岛UI"]    = "https://raw.githubusercontent.com/Wbw1470619303-ctrl/wbwhnb/refs/heads/main/Dynamic_Island%E6%BA%90%E7%A0%81.txt",
     ["ModernUI"]   = "https://gitee.com/BS_script/script/raw/master/Modern",
     ["MiniUI"]       = "https://gitee.com/BS_script/script/raw/master/Mini",
     ["MiniUI 灰"]    = "https://gitee.com/BS_script/script/raw/master/Mini2",
