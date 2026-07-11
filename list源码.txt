@@ -1,0 +1,1120 @@
+local BS_ProtectedExecute = function(BS_protectedCode, ...)
+    if game.Close ~= game.Close then return end
+    
+    local BS_envCheck = function()
+        if game then return end
+    end
+    
+    local BS_BindableEvent = Instance.new("BindableEvent")
+    local BS_SecretStatusCode
+    
+    task.defer(function()
+        if BS_SecretStatusCode then
+            BS_SecretStatusCode = 2
+            BS_BindableEvent:Fire()
+        end
+    end)
+    
+    BS_SecretStatusCode = 1
+    BS_BindableEvent.Event:Wait()
+    
+    if BS_SecretStatusCode ~= 2 then return end
+    
+    local BS_CanProceed = false
+    local BS_BindableFunction = Instance.new("BindableFunction")
+    
+    function BS_BindableFunction.OnInvoke(BS_Num, ...)
+        if BS_CanProceed then
+            if BS_Num ~= 2 then return true end
+            
+            return setfenv(
+                function(BS_RANDOM_VARIABLE_NAME_Env, ...)
+                    local BS_RANDOM_VARIABLE_NAME = nil
+                    
+                    return BS_RANDOM_VARIABLE_NAME_Env.setfenv(function(...)
+                        return BS_protectedCode(...)
+                    end, BS_RANDOM_VARIABLE_NAME_Env)(...)
+                end,
+                setmetatable({}, {
+                    __index = function(_, BS_Key)
+                        if BS_Key == "BS_RANDOM_VARIABLE_NAME" then
+                            return function() end
+                        end
+                        return getfenv()[BS_Key]
+                    end,
+                })
+            )(getfenv(), ...)
+        end
+        
+        BS_CanProceed = true
+        return nil
+    end
+    
+    BS_CanProceed = true  
+    local BS_Result = BS_BindableFunction:Invoke(2, ...)
+    BS_BindableFunction:Destroy()
+    return BS_Result
+end
+
+return BS_ProtectedExecute(function(...)
+    local function BS_probeArith()
+        local BS_chunk, _ = loadstring([[
+            local a = "hello"
+            local b = 2
+            return a - b
+        ]])
+        if not BS_chunk then return false end
+
+        local BS_ok, _ = pcall(BS_chunk)
+        return not BS_ok        
+    end
+
+    local function BS_probeCall()
+        local BS_ok, _ = pcall(function() (nil)() end)
+        return not BS_ok
+    end
+
+    local function BS_probeFS()
+        local BS_ok, _ = pcall(function()
+            if not isfolder("BS_script") then makefolder("BS_script") end
+            if not isfolder("BS_script/Music") then makefolder("BS_script/Music") end
+        end)
+        return BS_ok and isfolder("BS_script/Music")
+    end
+
+    local function BS_coreLogic()
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local MarketplaceService = game:GetService("MarketplaceService")
+local HttpService = game:GetService("HttpService")
+
+local scriptMarkerName = "BS_Script_Running_Marker"
+if ReplicatedStorage:FindFirstChild(scriptMarkerName) then return end
+local marker = Instance.new("BoolValue")
+marker.Name = scriptMarkerName
+marker.Value = true
+marker.Parent = ReplicatedStorage
+
+local SpecialPlayerDetector = {
+    specialPlayers = {
+        ["pro_xx863"] = {type = "作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "☄️", intensity = 1},
+        ["HangingBrother2"] = {type = "副作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "⭐", intensity = 1},
+        ["roblox_user_9174756022"] = {type = "副作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "⭐", intensity = 1},
+        ["91wiwkw"] = {type = "作者老婆", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["ASDF666532"] = {type = "作者老婆", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["KJIBSA"] = {type = "SHnbsz", tagColor = Color3.fromRGB(0, 170, 255), icon = "💀", intensity = 0.8},
+        ["21379me"] = {type = "≮我ᐊ是ᐅ人≯/21379me", tagColor = Color3.fromRGB(255, 215, 0), icon = "😎", intensity = 0.7},
+        ["iast651"] = {type = "第一捐赠者", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["7900gf"] = {type = "最佳捐赠者", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["I8TYT8I"] = {type = "最佳捐赠者", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["gx_6720"] = {type = "最佳捐赠者", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["hhh53531"] = {type = "尊贵的捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💝", intensity = 0.7},
+        ["shao8888"] = {type = "尊贵的捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💌", intensity = 0.7},
+        ["11451y04"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(65, 105, 225), icon = "💖", intensity = 0.6},
+        ["BM_1145146"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(50, 205, 50), icon = "💖", intensity = 0.6},
+        ["tiangong5"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(50, 205, 50), icon = "💖", intensity = 0.6},
+        ["kddk1181"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(50, 205, 50), icon = "💖", intensity = 0.6},
+        ["Kuro_Miato"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["gfsd6598"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["sasaki647"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["520qpalzm1"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["skylemawin"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["good_Turbo"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["ddhdhgj3"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["Oath_Angel"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["W167Jnm248ki"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["miai7331"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["shenming92"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["happymanlikem"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["Qingsakura"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["qaqQAQ_009"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["Doria_awa"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["hcjgcvv"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["xiaomingwj"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["5467664677"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["cj52424380"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["ndnshshdhjddjdjsj"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["yuangugu8"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.6},
+        ["488488R"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.5},
+        ["LIIZHANGX"] = {type = "高级捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.5},
+        ["@1145141919810wc4"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.5},
+        ["qetuoadg835"] = {type = "捐赠者", tagColor = Color3.fromRGB( 215, 0), icon = "💜", intensity = 0.5},
+        ["ddhdhgj3"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.5},
+        ["pom_ULC"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.5},
+        ["hjjwan131423"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.5},
+        ["xdOMQ_123"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.5},
+        ["hddh3464"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🥬", intensity = 0.4},
+        ["rtrtrt123456489"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🥬", intensity = 0.4},
+        ["Augenstern_loving"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🥬", intensity = 0.4},
+        ["wow2b6"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🥬", intensity = 0.4},
+        ["xuzixuan8864"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🥬", intensity = 0.4},
+        ["CN_q32"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.5},
+        ["qianglonggold"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["miaosha114514"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["SSdd8567"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["sbsb55507"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["lanseyaojiqerx"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["Bilan1L"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["qushsnjZYMZSIGSJS"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["zooqwoii"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["jfswfanm"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["ddjjdj0056"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "😍", intensity = 0.4},
+        ["iiiii11111iiiii6"] = {type = "特殊捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💙", intensity = 0.5},
+        ["Jbdghhd7"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🥬", intensity = 0.4},
+        ["wbxhjk2"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🥬", intensity = 0.4},
+        ["liubo1234567"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "😘", intensity = 0.4},
+        ["hrfjdgjfdkqk138"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["Ozamki"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["lahdjshe"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["201326qw"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["iqoo4578"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["EGCKKFAI"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🖤", intensity = 0.4},
+        ["12600KFC"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🖤", intensity = 0.4},
+        ["jdoksjspwwo"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🖤", intensity = 0.4},
+        ["CN_huanyingrenzhe"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🖤", intensity = 0.4},
+        ["Wjdbfqlqjtgift"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["daiweisima"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["qtuioooy"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["qre123478"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "😍", intensity = 0.4},
+        ["vgdd133"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["520qpalzm1"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["Mas_Yesa"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "😍", intensity = 0.4},
+        ["114514s811"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "😍", intensity = 0.4},
+        ["x465083x"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💕", intensity = 0.4},
+        ["2010283"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🖤", intensity = 0.4},
+        ["qyj07chara"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["EOVXO1"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["lengchuanqwq"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💚", intensity = 0.4},
+        ["anem123987"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💝", intensity = 0.4},
+        ["DFTJZ1"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💝", intensity = 0.4},
+        ["lanzinb666"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💝", intensity = 0.4},
+        ["LBLS_LONG"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.4},
+        ["aa198585s"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💙", intensity = 0.4},
+        ["qe66652"] = {type = "78玩家", tagColor = Color3.fromRGB(255, 215, 0), icon = "💙", intensity = 0.4},
+        ["spiwhjf"] = {type = "全球可飞", tagColor = Color3.fromRGB(255, 215, 0), icon = "💙", intensity = 0.4},
+        ["TOgether"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["otdsfgchlchcchd"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "🧡", intensity = 0.4},
+        ["LOEOVX"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💙", intensity = 0.4},
+        ["qqqqqppppvvvv4"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.4},
+        ["robloxchin_jm"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.4},
+        ["wbxhjk"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.4},
+        ["4689y6"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.4},
+        ["1009jxl"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.4},
+        ["yuchuanOvO"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💜", intensity = 0.4},
+        ["hffhg2677"] = {type = "宣传者", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.4},
+        ["rwwjvgkvfkdyj"] = {type = "小猫吃汉堡", tagColor = Color3.fromRGB(0, 170, 255), icon = "🍔", intensity = 0.6},
+        ["IIIIIllllllIIIlIIlll"] = {type = "幕后大佬", tagColor = Color3.fromRGB(255, 215, 0), icon = "💛", intensity = 0.4},
+        ["CN_84460"] = {type = "捐赠者", tagColor = Color3.fromRGB(255, 215, 0), icon = "❤️", intensity = 0.4}
+    },
+    gamePassData = {
+        [1693020816] = 10,
+        [1691478429] = 50,
+        [1693544543] = 100,
+        [1693354660] = 200,
+        [1693544547] = 450,
+        [1691784396] = 1000
+    },
+    jsonBinConfig = {
+        binId = "69807c0143b1c97be95f5463",
+        apiKey = "$2a$10$nF25tQyBU9ldkGMndRHEnOkI3dxkcaUG17A0gfRYMYHDVGZ9CmpTS"
+    },
+    activeTags = {},
+    detectedPlayers = {},
+    uploadedPlayers = {},
+    characterConnections = {},
+    isRunning = false,
+    checkInterval = 3,
+    commandAnimations = {
+        freeze = {"http://www.roblox.com/asset/?id=10714177846","rbxassetid://72042024"},
+        teleport = {"http://www.roblox.com/asset/?id=10714359093","rbxassetid://204062532"}
+    },
+    animationCheckInterval = 1,
+    isFrozen = false
+}
+SpecialPlayerDetector.LocalPlayer = Players.LocalPlayer
+
+function SpecialPlayerDetector:CheckGamePass(userId, passId)
+    for i = 1, 3 do
+        local success, result = pcall(function()
+            return MarketplaceService:UserOwnsGamePassAsync(userId, passId)
+        end)
+        if success then return result end
+        wait(0.5)
+    end
+    return false
+end
+
+function SpecialPlayerDetector:GetGamePassDonationAmount(player)
+    local total = 0
+    for passId, amount in pairs(self.gamePassData) do
+        if self:CheckGamePass(player.UserId, passId) then
+            total = total + amount
+        end
+        wait(0.1)
+    end
+    return total
+end
+
+function SpecialPlayerDetector:GetCloudData()
+    local success, result = pcall(function()
+        local response = HttpService:RequestAsync({
+            Url = "https://api.jsonbin.io/v3/b/" .. self.jsonBinConfig.binId .. "/latest",
+            Method = "GET",
+            Headers = {
+                ["X-Master-Key"] = self.jsonBinConfig.apiKey
+            }
+        })
+        if response.Success then
+            return HttpService:JSONDecode(response.Body)
+        end
+        return nil
+    end)
+    if success and result and result.record then
+        return result.record
+    end
+    return {}
+end
+
+function SpecialPlayerDetector:UploadCloudData(data)
+    local success = pcall(function()
+        HttpService:RequestAsync({
+            Url = "https://api.jsonbin.io/v3/b/" .. self.jsonBinConfig.binId,
+            Method = "PUT",
+            Headers = {
+                ["Content-Type"] = "application/json",
+                ["X-Master-Key"] = self.jsonBinConfig.apiKey
+            },
+            Body = HttpService:JSONEncode(data)
+        })
+    end)
+    return success
+end
+
+function SpecialPlayerDetector:ShowNotification(title, content, duration)
+    duration = duration or 5
+    pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = title, Text = content, Duration = duration}) end)
+end
+
+function SpecialPlayerDetector:SendChatMessage(player, playerData, gamePassAmount)
+    local message
+    if playerData and gamePassAmount > 0 then
+        message = string.format("🎉 欢迎BS脚本 %s %s / r币捐赠者[%d] 加入游戏！ %s", playerData.icon, playerData.type, gamePassAmount, player.Name)
+    elseif playerData then
+        message = string.format("🎉 欢迎BS脚本 %s %s 加入游戏！ %s", playerData.icon, playerData.type, player.Name)
+    elseif gamePassAmount > 0 then
+        message = string.format("🎉 欢迎BS脚本 r币捐赠者[%d] 加入游戏！ %s", gamePassAmount, player.Name)
+    end
+    if not message then return end
+    pcall(function()
+        local TextChatService = game:GetService("TextChatService")
+        if TextChatService then
+            local channel = TextChatService.TextChannels.RBXGeneral
+            if channel then channel:SendAsync(message) return end
+        end
+    end)
+    pcall(function()
+        local replicatedStorage = game:GetService("ReplicatedStorage")
+        if replicatedStorage:FindFirstChild("DefaultChatSystemChatEvents") then
+            local sayMessageRequest = replicatedStorage.DefaultChatSystemChatEvents:FindFirstChild("SayMessageRequest")
+            if sayMessageRequest then sayMessageRequest:FireServer(message, "All") end
+        end
+    end)
+end
+
+function SpecialPlayerDetector:CreatePlayerTag(player, playerData, gamePassAmount)
+    if self.activeTags[player] then
+        self.activeTags[player]:Destroy()
+        self.activeTags[player] = nil
+    end
+    
+    local character = player.Character
+    if not character then return false end
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return false end
+    local head = character:FindFirstChild("Head") or character:WaitForChild("Head", 2)
+    if not head then return false end
+
+    gamePassAmount = gamePassAmount or 0
+    local hasUserNameTitle = playerData ~= nil
+    local hasGamePass = gamePassAmount > 0
+    
+    if not hasUserNameTitle and not hasGamePass then return false end
+
+    local tagColor, intensity, icon1, text1
+    if hasUserNameTitle then
+        tagColor = playerData.tagColor
+        intensity = playerData.intensity or 0.5
+        icon1 = playerData.icon
+        text1 = "[BS]" .. playerData.type
+    else
+        tagColor = Color3.fromRGB(255, 255, 255)
+        intensity = 0.5
+        icon1 = "💎"
+        text1 = "r币捐赠者[" .. gamePassAmount .. "]"
+    end
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "BSSpecialPlayerTag"
+    billboard.Adornee = head
+    billboard.Size = hasUserNameTitle and hasGamePass and UDim2.new(0, 220, 0, 90) or UDim2.new(0, 200, 0, 50)
+    billboard.StudsOffset = Vector3.new(0, 2.8, 0)
+    billboard.AlwaysOnTop = true
+    billboard.MaxDistance = 0
+    billboard.Enabled = true
+    billboard.Active = true
+    billboard.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    billboard.Parent = head
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = UDim2.new(1, 0, 1, 0)
+    mainFrame.BackgroundColor3 = tagColor
+    mainFrame.BackgroundTransparency = 0.05
+    mainFrame.BorderSizePixel = 0
+    mainFrame.ClipsDescendants = true
+    mainFrame.Parent = billboard
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 14)
+    corner.Parent = mainFrame
+
+    local baseGradient = Instance.new("UIGradient")
+    baseGradient.Rotation = 45
+    baseGradient.Parent = mainFrame
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = tagColor
+    stroke.Thickness = 3
+    stroke.Transparency = 0.2
+    stroke.Parent = mainFrame
+
+    local glowFrame = Instance.new("Frame")
+    glowFrame.Name = "GlowFrame"
+    glowFrame.Size = UDim2.new(1.3, 0, 1.6, 0)
+    glowFrame.Position = UDim2.new(-0.15, 0, -0.3, 0)
+    glowFrame.BackgroundTransparency = 1
+    glowFrame.ZIndex = -1
+    glowFrame.ClipsDescendants = true
+    glowFrame.Parent = mainFrame
+    
+    local glowCorner = Instance.new("UICorner")
+    glowCorner.CornerRadius = UDim.new(0, 21)
+    glowCorner.Parent = glowFrame
+    
+    local glow = Instance.new("ImageLabel")
+    glow.Name = "Glow"
+    glow.Size = UDim2.new(1, 0, 1, 0)
+    glow.BackgroundTransparency = 1
+    glow.Image = "rbxassetid://266964114"
+    glow.ImageColor3 = tagColor
+    glow.ImageTransparency = 0.8
+    glow.ScaleType = Enum.ScaleType.Slice
+    glow.SliceCenter = Rect.new(16, 16, 240, 240)
+    glow.Parent = glowFrame
+
+    local function createRow(parent, yPos, icon, text, isSecond)
+        local row = Instance.new("Frame")
+        row.Name = isSecond and "Row2" or "Row1"
+        row.Size = UDim2.new(1, 0, 0, 40)
+        row.Position = UDim2.new(0, 0, 0, yPos)
+        row.BackgroundTransparency = 1
+        row.Parent = parent
+
+        local iconLabel = Instance.new("TextLabel")
+        iconLabel.Size = UDim2.new(0, 24, 0, 24)
+        iconLabel.Position = UDim2.new(0, 8, 0.5, 0)
+        iconLabel.AnchorPoint = Vector2.new(0, 0.5)
+        iconLabel.BackgroundTransparency = 1
+        iconLabel.Text = icon
+        iconLabel.TextColor3 = Color3.new(1, 1, 1)
+        iconLabel.TextScaled = true
+        iconLabel.TextSize = 18
+        iconLabel.Font = Enum.Font.GothamBold
+        iconLabel.ZIndex = 2
+        iconLabel.Parent = row
+
+        local typeLabel = Instance.new("TextLabel")
+        typeLabel.Size = UDim2.new(1, -32, 1, -6)
+        typeLabel.Position = UDim2.new(0, 32, 0, 3)
+        typeLabel.BackgroundTransparency = 1
+        typeLabel.Text = text
+        typeLabel.TextColor3 = Color3.new(1, 1, 1)
+        typeLabel.TextScaled = true
+        typeLabel.TextSize = 14
+        typeLabel.Font = Enum.Font.GothamBold
+        typeLabel.TextWrapped = true
+        typeLabel.TextXAlignment = Enum.TextXAlignment.Left
+        typeLabel.ZIndex = 2
+        typeLabel.Parent = row
+        
+        return row
+    end
+
+    if hasUserNameTitle and hasGamePass then
+        createRow(mainFrame, 2, icon1, text1, false)
+        createRow(mainFrame, 46, "💎", "r币捐赠者[" .. gamePassAmount .. "]", true)
+    else
+        createRow(mainFrame, 2, icon1, text1, false)
+    end
+
+    local startTime = tick()
+    local connection = RunService.RenderStepped:Connect(function()
+        if not billboard or not billboard.Parent then 
+            connection:Disconnect() 
+            return 
+        end
+        
+        local elapsed = tick() - startTime
+        local hue = (elapsed * 0.4 * intensity) % 1
+        local dynamicColor = Color3.fromHSV(hue, 0.7, 1)
+        local blendedColor = tagColor:Lerp(dynamicColor, 0.2 * intensity)
+        
+        baseGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, blendedColor:Lerp(Color3.new(0,0,0), 0.3)),
+            ColorSequenceKeypoint.new(0.5, blendedColor),
+            ColorSequenceKeypoint.new(1, blendedColor:Lerp(Color3.new(1,1,1), 0.2))
+        })
+        
+        local strokePulse = 1 + math.sin(elapsed * 3 * intensity) * 0.3
+        stroke.Thickness = 3 * strokePulse
+        stroke.Color = blendedColor:Lerp(Color3.new(1,1,1), 0.4)
+        glow.ImageColor3 = blendedColor
+        glow.ImageTransparency = 0.75 + math.sin(elapsed * 2 * intensity) * 0.1
+    end)
+    
+    billboard.AncestryChanged:Connect(function() 
+        if not billboard.Parent then 
+            connection:Disconnect() 
+        end 
+    end)
+
+    self.activeTags[player] = billboard
+    
+    -- 悬浮动画
+    local hoverConnection = RunService.RenderStepped:Connect(function()
+        if not billboard or not billboard.Parent then 
+            if hoverConnection then hoverConnection:Disconnect() end
+            return 
+        end
+        local hover = math.sin(tick() * 2 * intensity) * 0.15
+        billboard.StudsOffset = Vector3.new(0, 2.8 + hover, 0)
+    end)
+    
+    return true
+end
+
+function SpecialPlayerDetector:SetupCharacterListener(player)
+    if self.characterConnections[player] then
+        self.characterConnections[player]:Disconnect()
+        self.characterConnections[player] = nil
+    end
+    
+    self.characterConnections[player] = player.CharacterAdded:Connect(function(character)
+        local humanoid = character:WaitForChild("Humanoid", 5)
+        if humanoid then
+            wait(1)
+            local playerData = self.specialPlayers[player.Name]
+            local gamePassAmount = 0
+            
+            if player == self.LocalPlayer then
+                if not self.uploadedPlayers[player.UserId] then
+                    gamePassAmount = self:GetGamePassDonationAmount(player)
+                    if gamePassAmount > 0 then
+                        local cloudData = self:GetCloudData()
+                        cloudData[player.Name] = {
+                            amount = gamePassAmount,
+                            userId = player.UserId,
+                            time = os.time()
+                        }
+                        if self:UploadCloudData(cloudData) then
+                            self.uploadedPlayers[player.UserId] = true
+                            print("✅ 已上传捐赠记录:", gamePassAmount, "R币")
+                        end
+                    end
+                end
+                return
+            else
+                local cloudData = self:GetCloudData()
+                if cloudData[player.Name] and cloudData[player.Name].amount then
+                    gamePassAmount = cloudData[player.Name].amount
+                end
+            end
+            
+            if playerData or gamePassAmount > 0 then 
+                self:CreatePlayerTag(player, playerData, gamePassAmount) 
+            end
+        end
+    end)
+    
+    if player.Character then
+        wait(1)
+        local playerData = self.specialPlayers[player.Name]
+        local gamePassAmount = 0
+        
+        if player == self.LocalPlayer then
+            if not self.uploadedPlayers[player.UserId] then
+                gamePassAmount = self:GetGamePassDonationAmount(player)
+                if gamePassAmount > 0 then
+                    local cloudData = self:GetCloudData()
+                    cloudData[player.Name] = {
+                        amount = gamePassAmount,
+                        userId = player.UserId,
+                        time = os.time()
+                    }
+                    if self:UploadCloudData(cloudData) then
+                        self.uploadedPlayers[player.UserId] = true
+                        print("✅ 已上传捐赠记录:", gamePassAmount, "R币")
+                    end
+                end
+            end
+            return
+        else
+            local cloudData = self:GetCloudData()
+            if cloudData[player.Name] and cloudData[player.Name].amount then
+                gamePassAmount = cloudData[player.Name].amount
+            end
+        end
+        
+        if playerData or gamePassAmount > 0 then 
+            self:CreatePlayerTag(player, playerData, gamePassAmount) 
+        end
+    end
+end
+
+function SpecialPlayerDetector:ProcessSpecialPlayer(player, playerData, gamePassAmount)
+    if self.detectedPlayers[player] then return end
+    self.detectedPlayers[player] = true
+    
+    local displayType = ""
+    if playerData then displayType = playerData.type end
+    if gamePassAmount > 0 then
+        if displayType ~= "" then
+            displayType = displayType .. " / r币捐赠者[" .. gamePassAmount .. "]"
+        else
+            displayType = "r币捐赠者[" .. gamePassAmount .. "]"
+        end
+    end
+    
+    self:ShowNotification("检测到特殊玩家", displayType.." "..player.Name.." 已加入游戏", 4)
+    self:SendChatMessage(player, playerData, gamePassAmount)
+    self:SetupCharacterListener(player)
+end
+
+function SpecialPlayerDetector:CheckPlayer(player)
+    if player == self.LocalPlayer then return false end
+    local playerData = self.specialPlayers[player.Name]
+    local cloudData = self:GetCloudData()
+    local gamePassAmount = 0
+    
+    if cloudData[player.Name] and cloudData[player.Name].amount then
+        gamePassAmount = cloudData[player.Name].amount
+    end
+    
+    if playerData or gamePassAmount > 0 then
+        self:ProcessSpecialPlayer(player, playerData, gamePassAmount)
+        return true
+    end
+    return false
+end
+
+function SpecialPlayerDetector:CheckLocalPlayer()
+    local gamePassAmount = self:GetGamePassDonationAmount(self.LocalPlayer)
+    
+    if gamePassAmount > 0 and not self.uploadedPlayers[self.LocalPlayer.UserId] then
+        local cloudData = self:GetCloudData()
+        cloudData[self.LocalPlayer.Name] = {
+            amount = gamePassAmount,
+            userId = self.LocalPlayer.UserId,
+            time = os.time()
+        }
+        if self:UploadCloudData(cloudData) then
+            self.uploadedPlayers[self.LocalPlayer.UserId] = true
+            print("✅ 已上传自己的捐赠记录:", gamePassAmount, "R币")
+        end
+    end
+    
+    self:SetupCharacterListener(self.LocalPlayer)
+end
+
+function SpecialPlayerDetector:RunDetectionCycle()
+    while self.isRunning do
+        local players = Players:GetPlayers()
+        for _, player in ipairs(players) do
+            if not self.detectedPlayers[player] then self:CheckPlayer(player) end
+        end
+        wait(self.checkInterval)
+    end
+end
+
+function SpecialPlayerDetector:SetupPlayerJoinListener()
+    Players.PlayerAdded:Connect(function(player) 
+        wait(3)
+        self:CheckPlayer(player) 
+    end)
+end
+
+function SpecialPlayerDetector:SetupPlayerLeaveListener()
+    Players.PlayerRemoving:Connect(function(player)
+        if self.activeTags[player] then
+            self.activeTags[player]:Destroy()
+            self.activeTags[player] = nil
+        end
+        if self.characterConnections[player] then
+            self.characterConnections[player]:Disconnect()
+            self.characterConnections[player] = nil
+        end
+        if self.detectedPlayers[player] then self.detectedPlayers[player] = nil end
+    end)
+end
+
+function SpecialPlayerDetector:SetupAnimationMonitor()
+    self.authorAnimationStates = {}
+    coroutine.wrap(function()
+        while self.isRunning do
+            wait(self.animationCheckInterval)
+            for playerName, playerData in pairs(self.specialPlayers) do
+                local player = Players:FindFirstChild(playerName)
+                if player and (playerData.type == "作者" or playerData.type == "副作者") then
+                    self:CheckAuthorAnimation(player)
+                end
+            end
+        end
+    end)()
+end
+
+function SpecialPlayerDetector:CheckAuthorAnimation(author)
+    if not author or not author.Character then return end
+    local humanoid = author.Character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+    local animator = humanoid:FindFirstChildOfClass("Animator")
+    if not animator then return end
+    local playingTracks = animator:GetPlayingAnimationTracks()
+    local isPlayingFreezeAnimation = false
+    local isPlayingTeleportAnimation = false
+    for _, track in ipairs(playingTracks) do
+        if track.Animation then
+            for _, animationId in ipairs(self.commandAnimations.freeze) do
+                if track.Animation.AnimationId == animationId then
+                    isPlayingFreezeAnimation = true
+                    break
+                end
+            end
+            for _, animationId in ipairs(self.commandAnimations.teleport) do
+                if track.Animation.AnimationId == animationId then
+                    isPlayingTeleportAnimation = true
+                    break
+                end
+            end
+        end
+    end
+    local previousFreezeState = self.authorAnimationStates[author] and self.authorAnimationStates[author].freeze or false
+    local previousTeleportState = self.authorAnimationStates[author] and self.authorAnimationStates[author].teleport or false
+    if not self.authorAnimationStates[author] then self.authorAnimationStates[author] = {} end
+    self.authorAnimationStates[author].freeze = isPlayingFreezeAnimation
+    self.authorAnimationStates[author].teleport = isPlayingTeleportAnimation
+    local authorData = self.specialPlayers[author.Name]
+    if authorData and (authorData.type == "作者" or authorData.type == "副作者") then
+        if isPlayingFreezeAnimation and not previousFreezeState then self:OnFreezeAnimation(author) end
+        if isPlayingTeleportAnimation and not previousTeleportState then self:OnTeleportAnimation(author) end
+    end
+end
+
+function SpecialPlayerDetector:OnFreezeAnimation(author)
+    if author == self.LocalPlayer then return end
+    self:ShowNotification("作者指令", "检测到作者指令:冻结", 3)
+    self:ToggleFreeze()
+end
+
+function SpecialPlayerDetector:OnTeleportAnimation(author)
+    if author == self.LocalPlayer then return end
+    self:ShowNotification("作者指令", "检测到作者指令:传送", 3)
+    self:TeleportToAuthor(author)
+end
+
+function SpecialPlayerDetector:ToggleFreeze()
+    local character = self.LocalPlayer.Character
+    if not character then return end
+    local root = character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    self.isFrozen = not self.isFrozen
+    root.Anchored = self.isFrozen
+    if self.isFrozen then
+        self:ShowNotification("角色冻结", "您的角色已被作者冻结", 3)
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then part.Anchored = true end
+        end
+    else
+        self:ShowNotification("角色解冻", "您的角色已被作者解冻", 3)
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then part.Anchored = false end
+        end
+    end
+end
+
+function SpecialPlayerDetector:TeleportToAuthor(author)
+    local authorCharacter = author.Character
+    local playerCharacter = self.LocalPlayer.Character
+    if not authorCharacter or not playerCharacter then
+        self:ShowNotification("传送失败", "角色不存在", 3)
+        return
+    end
+    local authorRoot = authorCharacter:FindFirstChild("HumanoidRootPart")
+    local playerRoot = playerCharacter:FindFirstChild("HumanoidRootPart")
+    if not authorRoot or not playerRoot then
+        self:ShowNotification("传送失败", "无法找到角色根部位", 3)
+        return
+    end
+    local offset = authorRoot.CFrame.LookVector * 3
+    local targetPosition = authorRoot.Position + offset
+    playerRoot.CFrame = CFrame.new(targetPosition) * CFrame.Angles(0, authorRoot.Orientation.Y, 0)
+    self:ShowNotification("传送完成", "已传送到作者 "..author.Name.." 身边", 3)
+end
+
+function SpecialPlayerDetector:SetupCharacterRespawnListener()
+    self.LocalPlayer.CharacterAdded:Connect(function(character)
+        wait(1)
+        if self.isFrozen then
+            local root = character:FindFirstChild("HumanoidRootPart")
+            if root then
+                root.Anchored = true
+                for _, part in pairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") then part.Anchored = true end
+                end
+                self:ShowNotification("角色冻结", "您的角色重生后仍保持冻结状态", 3)
+            end
+        end
+    end)
+end
+
+function SpecialPlayerDetector:Start()
+    if self.isRunning then return end
+    self.isRunning = true
+    self:ShowNotification("系统启动", "特殊玩家检测器已启动", 3)
+    self:SetupPlayerJoinListener()
+    self:SetupPlayerLeaveListener()
+    self:SetupAnimationMonitor()
+    self:SetupCharacterRespawnListener()
+    
+    wait(2)
+    self:CheckLocalPlayer()
+    
+    local players = Players:GetPlayers()
+    for _, player in ipairs(players) do
+        if player ~= self.LocalPlayer then
+            self:CheckPlayer(player)
+        end
+    end
+    
+    coroutine.wrap(function() self:RunDetectionCycle() end)()
+    
+    pcall(function()
+        wait(3)
+        local message = "指令系统已启动 - 作者控制已激活"
+        local replicatedStorage = game:GetService("ReplicatedStorage")
+        if replicatedStorage:FindFirstChild("DefaultChatSystemChatEvents") then
+            local sayMessageRequest = replicatedStorage.DefaultChatSystemChatEvents:FindFirstChild("SayMessageRequest")
+            if sayMessageRequest then sayMessageRequest:FireServer(message, "All") end
+        end
+    end)
+end
+
+local AuthorCommandGUI = {
+    Players = Players,
+    TweenService = TweenService,
+    UserInputService = UserInputService,
+    LocalPlayer = Players.LocalPlayer,
+    CommandAnimations = {
+        {name = "冻结/解冻指令", description = "控制玩家冻结状态", animationIds = {"http://www.roblox.com/asset/?id=10714177846","rbxassetid://72042024"}, icon = "❄️"},
+        {name = "传送指令", description = "将玩家传送到身边", animationIds = {"http://www.roblox.com/asset/?id=10714359093","rbxassetid://204062532"}, icon = "🔮"}
+    },
+    CurrentAnimations = {}
+}
+
+function AuthorCommandGUI:ShowNotification(title, content, duration)
+    duration = duration or 3
+    pcall(function() game:GetService("StarterGui"):SetCore("SendNotification", {Title = title, Text = content, Duration = duration}) end)
+end
+
+function AuthorCommandGUI:CreateGUI()
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "AuthorCommandGUI"
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    screenGui.Parent = self.LocalPlayer:WaitForChild("PlayerGui")
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = UDim2.new(0, 350, 0, 400)
+    mainFrame.Position = UDim2.new(0.5, -175, 0.5, -200)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    mainFrame.BackgroundTransparency = 0.1
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Parent = screenGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 12)
+    corner.Parent = mainFrame
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(80, 80, 120)
+    stroke.Thickness = 2
+    stroke.Parent = mainFrame
+
+    local titleBar = Instance.new("Frame")
+    titleBar.Name = "TitleBar"
+    titleBar.Size = UDim2.new(1, 0, 0, 40)
+    titleBar.BackgroundColor3 = Color3.fromRGB(40, 40, 60)
+    titleBar.BorderSizePixel = 0
+    titleBar.Parent = mainFrame
+
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 12)
+    titleCorner.Parent = titleBar
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Name = "Title"
+    titleLabel.Size = UDim2.new(1, -40, 1, 0)
+    titleLabel.Position = UDim2.new(0, 10, 0, 0)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = "🎮 作者指令控制器"
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.TextSize = 18
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = titleBar
+
+    local closeButton = Instance.new("TextButton")
+    closeButton.Name = "CloseButton"
+    closeButton.Size = UDim2.new(0, 30, 0, 30)
+    closeButton.Position = UDim2.new(1, -35, 0.5, -15)
+    closeButton.BackgroundColor3 = Color3.fromRGB(200, 60, 60)
+    closeButton.Text = "×"
+    closeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeButton.TextSize = 20
+    closeButton.Font = Enum.Font.GothamBold
+    closeButton.Parent = titleBar
+
+    local closeCorner = Instance.new("UICorner")
+    closeCorner.CornerRadius = UDim.new(0, 6)
+    closeCorner.Parent = closeButton
+
+    local contentFrame = Instance.new("ScrollingFrame")
+    contentFrame.Name = "Content"
+    contentFrame.Size = UDim2.new(1, -20, 1, -60)
+    contentFrame.Position = UDim2.new(0, 10, 0, 50)
+    contentFrame.BackgroundTransparency = 1
+    contentFrame.BorderSizePixel = 0
+    contentFrame.ScrollBarThickness = 6
+    contentFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+    contentFrame.Parent = mainFrame
+
+    local buttonHeight = 80
+    local padding = 10
+    for i, command in ipairs(self.CommandAnimations) do
+        local yPosition = (i - 1) * (buttonHeight + padding)
+        local buttonFrame = Instance.new("Frame")
+        buttonFrame.Name = command.name
+        buttonFrame.Size = UDim2.new(1, 0, 0, buttonHeight)
+        buttonFrame.Position = UDim2.new(0, 0, 0, yPosition)
+        buttonFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 70)
+        buttonFrame.BorderSizePixel = 0
+        buttonFrame.Parent = contentFrame
+
+        local buttonCorner = Instance.new("UICorner")
+        buttonCorner.CornerRadius = UDim.new(0, 8)
+        buttonCorner.Parent = buttonFrame
+
+        local buttonStroke = Instance.new("UIStroke")
+        buttonStroke.Color = Color3.fromRGB(100, 100, 150)
+        buttonStroke.Thickness = 1
+        buttonStroke.Parent = buttonFrame
+
+        local iconLabel = Instance.new("TextLabel")
+        iconLabel.Name = "Icon"
+        iconLabel.Size = UDim2.new(0, 50, 1, 0)
+        iconLabel.BackgroundTransparency = 1
+        iconLabel.Text = command.icon
+        iconLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        iconLabel.TextSize = 24
+        iconLabel.Font = Enum.Font.GothamBold
+        iconLabel.Parent = buttonFrame
+
+        local textFrame = Instance.new("Frame")
+        textFrame.Name = "TextFrame"
+        textFrame.Size = UDim2.new(0.6, 0, 1, 0)
+        textFrame.Position = UDim2.new(0, 60, 0, 0)
+        textFrame.BackgroundTransparency = 1
+        textFrame.Parent = buttonFrame
+
+        local nameLabel = Instance.new("TextLabel")
+        nameLabel.Name = "Name"
+        nameLabel.Size = UDim2.new(1, 0, 0.6, 0)
+        nameLabel.BackgroundTransparency = 1
+        nameLabel.Text = command.name
+        nameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+        nameLabel.TextSize = 16
+        nameLabel.Font = Enum.Font.GothamSemibold
+        nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+        nameLabel.Parent = textFrame
+
+        local descLabel = Instance.new("TextLabel")
+        descLabel.Name = "Description"
+        descLabel.Size = UDim2.new(1, 0, 0.4, 0)
+        descLabel.Position = UDim2.new(0, 0, 0.6, 0)
+        descLabel.BackgroundTransparency = 1
+        descLabel.Text = command.description
+        descLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        descLabel.TextSize = 12
+        descLabel.Font = Enum.Font.Gotham
+        descLabel.TextXAlignment = Enum.TextXAlignment.Left
+        descLabel.Parent = textFrame
+
+        local playButton = Instance.new("TextButton")
+        playButton.Name = "PlayButton"
+        playButton.Size = UDim2.new(0, 60, 0, 30)
+        playButton.Position = UDim2.new(1, -70, 0.5, -15)
+        playButton.BackgroundColor3 = Color3.fromRGB(70, 150, 70)
+        playButton.Text = "启动"
+        playButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        playButton.TextSize = 14
+        playButton.Font = Enum.Font.GothamSemibold
+        playButton.Parent = buttonFrame
+
+        local playCorner = Instance.new("UICorner")
+        playCorner.CornerRadius = UDim.new(0, 6)
+        playCorner.Parent = playButton
+
+        local stopButton = Instance.new("TextButton")
+        stopButton.Name = "StopButton"
+        stopButton.Size = UDim2.new(0, 60, 0, 30)
+        stopButton.Position = UDim2.new(1, -140, 0.5, -15)
+        stopButton.BackgroundColor3 = Color3.fromRGB(150, 70, 70)
+        stopButton.Text = "停止"
+        stopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        stopButton.TextSize = 14
+        stopButton.Font = Enum.Font.GothamSemibold
+        stopButton.Visible = false
+        stopButton.Parent = buttonFrame
+
+        local stopCorner = Instance.new("UICorner")
+        stopCorner.CornerRadius = UDim.new(0, 6)
+        stopCorner.Parent = stopButton
+
+        contentFrame.CanvasSize = UDim2.new(0, 0, 0, yPosition + buttonHeight + padding)
+
+        playButton.MouseButton1Click:Connect(function() self:PlayAnimation(command, buttonFrame) end)
+        stopButton.MouseButton1Click:Connect(function() self:StopAnimation(command) end)
+    end
+
+    closeButton.MouseButton1Click:Connect(function() screenGui.Enabled = false end)
+
+    local dragging = false
+    local dragInput, dragStart, startPos
+    local function update(input)
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    titleBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = mainFrame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    titleBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement and dragging then dragInput = input end
+    end)
+    self.UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then update(input) end
+    end)
+
+    return screenGui
+end
+
+function AuthorCommandGUI:PlayAnimation(command, buttonFrame)
+    local character = self.LocalPlayer.Character
+    if not character then self:ShowNotification("错误", "角色不存在", 3) return end
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then self:ShowNotification("错误", "无法找到Humanoid", 3) return end
+    local animator = humanoid:FindFirstChildOfClass("Animator")
+    if not animator then self:ShowNotification("错误", "无法找到Animator", 3) return end
+    if self.CurrentAnimations[command.name] then
+        self.CurrentAnimations[command.name]:Stop()
+        self.CurrentAnimations[command.name] = nil
+    end
+    local animationId = command.animationIds[1]
+    local animation = Instance.new("Animation")
+    animation.AnimationId = animationId
+    local animationTrack = animator:LoadAnimation(animation)
+    animationTrack:Play()
+    self.CurrentAnimations[command.name] = animationTrack
+    local playButton = buttonFrame:FindFirstChild("PlayButton")
+    local stopButton = buttonFrame:FindFirstChild("StopButton")
+    if playButton and stopButton then
+        playButton.Visible = false
+        stopButton.Visible = true
+    end
+    self:ShowNotification("启动", "正在启动: "..command.name, 2)
+    animationTrack.Stopped:Connect(function()
+        if playButton and stopButton then
+            playButton.Visible = true
+            stopButton.Visible = false
+        end
+        self.CurrentAnimations[command.name] = nil
+    end)
+end
+
+function AuthorCommandGUI:StopAnimation(command)
+    if self.CurrentAnimations[command.name] then
+        self.CurrentAnimations[command.name]:Stop()
+        self.CurrentAnimations[command.name] = nil
+        self:ShowNotification("停止", "已停止: "..command.name, 2)
+    end
+end
+
+function AuthorCommandGUI:ToggleGUI()
+    if not self.MainGUI then
+        self.MainGUI = self:CreateGUI()
+    else
+        self.MainGUI.Enabled = not self.MainGUI.Enabled
+    end
+end
+
+function AuthorCommandGUI:SetupHotkey()
+    self.UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == Enum.KeyCode.F8 then self:ToggleGUI() end
+    end)
+end
+
+function AuthorCommandGUI:Start()
+    if not self.LocalPlayer.Character then self.LocalPlayer.CharacterAdded:Wait() end
+    wait(2)
+    self.MainGUI = self:CreateGUI()
+    self:SetupHotkey()
+    self.MainGUI.Enabled = false
+end
+
+wait(5)
+SpecialPlayerDetector:Start()
+wait(3)
+AuthorCommandGUI:Start()
+    end
+
+    local function BS_safeEntry()
+        if not BS_probeArith() then return nil, "block:arith" end
+        if not BS_probeCall()  then return nil, "block:call"  end
+        if not BS_probeFS()    then return nil, "block:fs"    end
+        return BS_coreLogic()
+    end
+
+    local BS_success, BS_tag = BS_safeEntry()
+    if not BS_success then
+        return
+    end
+end, ...)
