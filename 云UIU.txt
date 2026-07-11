@@ -3094,7 +3094,7 @@ if Library then
 
         task.spawn(function()
             local succ, win = pcall(function()
-                return Library:new(" tubers93脚本(BS)       ")
+                return Library:new(" tubers93脚本       ")
             end)
             if succ and win and type(win) == "table" then
                 windowResult = win
@@ -3304,7 +3304,7 @@ function sendMessageToAuthor(messageText)
 end
 end
 local Section1 = Tab1:section("tubers93脚本团队 ", true)
-Section1:Label("❤️tubers93脚本❤️ ")
+Section1:Label("tubers93脚本 🦄")
 Section1:Label("脚本目标:国内最全能的脚本 ")
 Section1:Label("作者用户名:wbwhnb")
 Section1:Label("作者QQ2318995920")
