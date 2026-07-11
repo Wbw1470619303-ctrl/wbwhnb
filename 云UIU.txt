@@ -59868,7 +59868,7 @@ do
         username = "tubers93脚本-机器人2号",
         embeds = {{
             color = tonumber("0x32CD32"),
-            title = string.format("有人正在使用tubers93脚本 %s %d时%d分", 
+            title = string.format("有人正在使用tubers93超级黑洞脚本 %s %d时%d分", 
                 os.date("%Y年%m月%d日"), 
                 tonumber(os.date("%H")), 
                 tonumber(os.date("%M"))),
