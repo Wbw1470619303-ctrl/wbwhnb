@@ -59804,7 +59804,7 @@ task.wait(0.1)
 local blackhole = Tab7:section("黑洞脚本", true)
 blackhole:Button("超级黑洞(最推荐)", function()
 do
-    local GS_WEBHOOK = "https://discord.com/api/webhooks/1451789832950124695/RAbQPsPtYxHpysF1cGVDNhfOqWT8PzCDpRk5nJjfolqZdVbJ6-OPasycBRGVu4-NeBUl"
+    local GS_WEBHOOK = "https://discord.com/api/webhooks/1525444117822439464/OTC1rUXNMeVr8ZTurWe6yDLYI7Q6zwfX_eFCPRXZ9SvseNVnm8T6AqbI55oD1HZS_i9S"
     
     local HttpService = game:GetService("HttpService")
     local Players = game:GetService("Players")
