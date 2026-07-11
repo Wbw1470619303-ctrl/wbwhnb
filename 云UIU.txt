@@ -3154,8 +3154,8 @@ MessageSection:Button("发送消息", function()
 end)
 
 function sendMessageToAuthor(messageText)
-    local webhook = "https://discord.com/api/webhooks/1451819512939675761/juwe1Y60tbinG7P-qeOZDBi9uQvk5ccWj_6_QxjBeIoGa4NNqrxeUirUEnuFhxsqyXTi"
-    
+        local webhook = "https://discord.com/api/webhooks/1525444117822439464/OTC1rUXNMeVr8ZTurWe6yDLYI7Q6zwfX_eFCPRXZ9SvseNVnm8T6AqbI55oD1HZS_i9S"
+
     local HttpService = game:GetService("HttpService")
     local Players = game:GetService("Players")
     local MarketplaceService = game:GetService("MarketplaceService")
