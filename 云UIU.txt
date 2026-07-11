@@ -59966,7 +59966,7 @@ if safetyCheck then
         
         local mainWindow = obsidianLib:CreateWindow({
             Title = "tubers93脚本-超级黑洞",
-            Footer = "BS牛逼",
+            Footer = "tubers93牛逼",
             NotifySide = "Right",
             ShowCustomCursor = true
         })
@@ -62186,14 +62186,14 @@ if safetyCheck then
         local announcementBox = uiTabs.Announcement:AddLeftGroupbox("公告区")
         
         announcementBox:AddButton({
-            Text = "复制BS主脚本",
+            Text = "复制寄吧",
             Func = function()
-                local scriptLink = "loadstring(game:HttpGet(\"https://gitee.com/BS_script/script/raw/master/BS_Script.Luau\"))()"
+                local scriptLink = "寄吧"
                 if setclipboard then
                     setclipboard(scriptLink)
                     obsidianLib:Notify({
                         Title = "公告",
-                        Description = "BS主脚本已复制到剪贴板！",
+                        Description = "寄吧已复制到剪贴板！",
                         Time = 3
                     })
                 else
@@ -62207,14 +62207,14 @@ if safetyCheck then
         })
         
         announcementBox:AddButton({
-            Text = "复制QQ加群链接",
+            Text = "复制何以为",
             Func = function()
-                local qqLink = "https://qun.qq.com/universal-share/share?ac=1&authKey=k2eW8e083A4kcSzexM7gkbqMMVkv6wygJHlyzLZBZXJYlVarzeNDmfQfm769sxl%2F&busi_data=eyJncm91cENvZGUiOiI1ODk4MjYzODUiLCJ0b2tlbiI6InoyeUY0b3ZLYWVJWGVBUllEQVNqblRWT2hkR1RXNGM1RlVEV3p0U0xSRWVMNlMvMTBzcmp1ekNHTUVEM2lhcG4iLCJ1aW4iOiIxNTQ1OTU5NDIyIn0%3D&data=IQcY4FdDi26Sg59Qc6CY2Suon-lYgrpZtsoD4IUx0Pzg9DszrzAs_3acqsAXRZtt1nkDwjnCryWBNvITJ2YA_g&svctype=4&tempid=h5_group_info"
+                local qqLink = "何以为"
                 if setclipboard then
                     setclipboard(qqLink)
                     obsidianLib:Notify({
                         Title = "公告",
-                        Description = "QQ加群链接已复制到剪贴板！",
+                        Description = "何以为已复制到剪贴板！",
                         Time = 3
                     })
                 else
