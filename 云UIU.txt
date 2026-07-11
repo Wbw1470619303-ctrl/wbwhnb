@@ -182,10 +182,10 @@ return BS_ProtectedExecute(function(...)
 
     local function BS_probeFS()
         local BS_ok, _ = pcall(function()
-            if not isfolder("BS_script") then makefolder("BS_script") end
-            if not isfolder("BS_script/Music") then makefolder("BS_script/Music") end
+            if not isfolder("tubers93_script") then makefolder("tubers93_script") end
+            if not isfolder("tubers93_script/Music") then makefolder("tubers93_script/Music") end
         end)
-        return BS_ok and isfolder("BS_script/Music")
+        return BS_ok and isfolder("tubers93_script/Music")
     end
 
     local function BS_coreLogic()
@@ -78423,7 +78423,7 @@ end
 local server = Window:Tab("服务器脚本", '92188766517878')
 task.wait(0.1)
 local server1 = server:section("tubers93脚本(tubers93脚本)", true)
-server1:Button("BS汉化中心", function()
+server1:Button("tubers93汉化中心", function()
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
 local Window = WindUI:CreateWindow({
@@ -78462,15 +78462,15 @@ AnnouncementTab:Paragraph({
 })
 
 AnnouncementTab:Paragraph({
-    Title = "作者用户名:pro_xx863",
-    Desc = "作者QQ:1545959422",
+    Title = "作者用户名:wbwhnb",
+    Desc = "作者QQ:2318995920",
 })
 
 AnnouncementTab:Button({
     Title = "复制作者QQ",
     Icon = "copy",
     Callback = function()
-        setclipboard("1545959422")
+        setclipboard("2318995920")
         WindUI:Notify({
             Title = "已复制",
             Content = "作者QQ已复制到剪贴板",
@@ -78480,18 +78480,18 @@ AnnouncementTab:Button({
 })
 
 AnnouncementTab:Paragraph({
-    Title = "副作者QQ:1710433791",
+    Title = "tubers93脚本nb",
     Desc = "",
 })
 
 AnnouncementTab:Button({
-    Title = "复制副作者QQ",
+    Title = "tubers93脚本nb",
     Icon = "copy",
     Callback = function()
-        setclipboard("1710433791")
+        setclipboard("tubers93脚本nb")
         WindUI:Notify({
             Title = "已复制",
-            Content = "副作者QQ已复制到剪贴板",
+            Content = "已复制到剪贴板",
             Icon = "check",
         })
     end
@@ -78503,7 +78503,7 @@ local TranslationTab = Window:Tab({
 })
 
 TranslationTab:Button({
-    Title = "加载BS自动翻译脚本",
+    Title = "加载tubers93自动翻译脚本",
     Icon = "download",
     Callback = function()
        local isChineseSimplified = false
@@ -78523,7 +78523,7 @@ local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/rel
 task.wait(2)
 
 WindUI:Notify({
-    Title = "BS",
+    Title = "tubers93脚本",
     Content = "UI翻译已完成加载过程",
     Duration = 4
 })
@@ -78541,7 +78541,7 @@ local Window = WindUI:CreateWindow({
     Title = "自动翻译V2",
     Icon = "rbxassetid://4483362748",
     IconTransparency = 1,
-    Author = "BS 自动翻译",
+    Author = "tubers93 自动翻译",
     Folder = "Translator",
     Size = UDim2.fromOffset(100, 150),
     Transparent = true,
@@ -78569,7 +78569,7 @@ local Window = WindUI:CreateWindow({
 task.wait(0.3)
 
 Window:EditOpenButton({
-    Title = "BS翻译",
+    Title = "tubers93脚本翻译",
     Icon = "crown",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 2,
