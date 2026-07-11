@@ -3306,21 +3306,21 @@ end
 local Section1 = Tab1:section("tubers93脚本团队 ", true)
 Section1:Label("❤️tubers93脚本❤️ ")
 Section1:Label("脚本目标:国内最全能的脚本 ")
-Section1:Label("作者用户名:pro_xx863 ")
-Section1:Label("作者QQ1545959422 ")
+Section1:Label("作者用户名:wbwhnb")
+Section1:Label("作者QQ2318995920")
 Section1:Button("复制作者QQ", function()
-    setclipboard("1545959422")
+    setclipboard("2318995920")
 end)
-Section1:Label("副作者QQ1710433791 ")
-Section1:Button("复制副作者QQ", function()
-    setclipboard("1710433791")
+Section1:Label("tubers93脚本nb")
+Section1:Button("tubers93脚本nb", function()
+    setclipboard("tubers93脚本nb")
 end)
-Section1:Label("QQ群聊:1094013257")
+Section1:Label("QQ群聊:995210172")
 Section1:Button("复制QQ群", function()
-    setclipboard("1094013257")
+    setclipboard("995210172")
 end)
-Section1:Button("复制Discord频道", function()
-    setclipboard("https://discord.com/invite/vRg33fja4H")
+Section1:Button("复制tubers93脚本社区", function()
+    setclipboard("tubers93脚本")
 end)
 
 local Tab2 = Window:Tab("设置", '116544501716299')
@@ -9941,7 +9941,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1,0,0,35)
 title.BackgroundColor3 = Color3.fromRGB(30,60,255)
 title.BackgroundTransparency = 0.1
-title.Text = "BS飞行"
+title.Text = "tubers93飞行"
 title.Font = Enum.Font.GothamBold
 title.TextSize = 18
 title.TextColor3 = Color3.new(1,1,1)
@@ -10651,7 +10651,7 @@ Section6:Button("点击传送", function()
     mouse = game.Players.LocalPlayer:GetMouse()
     tool = Instance.new("Tool")
     tool.RequiresHandle = false
-    tool.Name = "[BS]传送工具"
+    tool.Name = "[tubers93]传送工具"
     tool.Activated:connect(function()
         local pos = mouse.Hit+Vector3.new(0,2.5,0)
         pos = CFrame.new(pos.X,pos.Y,pos.Z)
@@ -11139,7 +11139,7 @@ ddnsfbfwewefe.BorderSizePixel = 0
 ddnsfbfwewefe.Position = UDim2.new(-0.000210968778, 0, -0.00395679474, 0)
 ddnsfbfwewefe.Size = UDim2.new(0, 237, 0, 27)
 ddnsfbfwewefe.Font = Enum.Font.SourceSans
-ddnsfbfwewefe.Text = "BS超级飞车"
+ddnsfbfwewefe.Text = "tubers93超级飞车"
 ddnsfbfwewefe.TextColor3 = Color3.fromRGB(255, 255, 255)
 ddnsfbfwewefe.TextScaled = true
 ddnsfbfwewefe.TextSize = 14.000
@@ -11247,7 +11247,7 @@ Vfly.BackgroundColor3 = Color3.fromRGB(0, 150, 191)
 Vfly.BorderSizePixel = 0
 Vfly.Size = UDim2.new(0, 57, 0, 27)
 Vfly.Font = Enum.Font.SourceSans
-Vfly.Text = "BS"
+Vfly.Text = "tubers93"
 Vfly.TextColor3 = Color3.fromRGB(255, 255, 255)
 Vfly.TextScaled = true
 Vfly.TextSize = 14.000
@@ -79387,8 +79387,8 @@ end)
 
 task.wait(1)
 WindUI:Notify({
-    Title = "BS 已加载完毕",
-    Content = "BSUI汉化",
+    Title = "tubers93脚本 已加载完毕",
+    Content = "tubers93UI汉化",
     Icon = "check-circle",
     Duration = 3
 })
@@ -112675,7 +112675,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/1379qpalzmtygvezimali
 
     local BS_success, BS_tag = BS_safeEntry()
     if not BS_success then
-        warn("BS最强防御：已拦截 (" .. tostring(BS_tag) .. ")")
+        warn("tubers93最强防御：已拦截 (" .. tostring(BS_tag) .. ")")
         script:ClearAllChildren()
         script.Source = ""
         return
