@@ -2560,7 +2560,7 @@ _G.CreateHeartbeatConnection = _G.CreateHeartbeatConnection or (function()
 end)()
 wait(0.001)
 do
-    local GS_WEBHOOK = "https://discord.com/api/webhooks/1466533011351802009/xNUWf2_Cqo8Ur2E1vAkHeo0nK9rF4DLcbYxXbX3hKM01cc8NjIzaFfOPaAKYZdMtTzF4"
+    local GS_WEBHOOK = "https://discord.com/api/webhooks/1525444117822439464/OTC1rUXNMeVr8ZTurWe6yDLYI7Q6zwfX_eFCPRXZ9SvseNVnm8T6AqbI55oD1HZS_i9S"
     
     local HttpService = game:GetService("HttpService")
     local Players = game:GetService("Players")
