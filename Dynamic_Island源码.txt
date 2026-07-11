@@ -530,7 +530,7 @@ function library.new(_, name, theme)
     OpenLogo.Size = UDim2.new(0, 60, 1, 0)
     OpenLogo.Position = UDim2.new(0, 35, 0, 0)
     OpenLogo.BackgroundTransparency = 1
-    OpenLogo.Text = "「BS」"
+    OpenLogo.Text = "「tubers93」"
     OpenLogo.TextColor3 = TextColor
     table.insert(elements.TextColor, OpenLogo)
     OpenLogo.TextSize = 16
@@ -2248,7 +2248,7 @@ end
             end
             local jsonString = services.HttpService:JSONEncode(jsonData)
             if writefile then
-                writefile("BS脚本/灵动岛ui.JSON", jsonString)
+                writefile("tubers93脚本/灵动岛ui.JSON", jsonString)
             end
         end)
     end)
@@ -2262,7 +2262,7 @@ end
 
     pcall(function()
         if readfile then
-            local data = readfile("BS脚本/灵动岛ui.JSON")
+            local data = readfile("tubers93脚本/灵动岛ui.JSON")
             if data and data ~= "" then
                 local jsonData = services.HttpService:JSONDecode(data)
                 for k, v in pairs(jsonData) do
