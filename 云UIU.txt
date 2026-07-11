@@ -2868,7 +2868,7 @@ local function createChoiceUI()
         end)
         
         if sendMessage then
-            loadstring(game:HttpGet("https://pastebin.com/raw/DJ82LzhM"))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Wbw1470619303-ctrl/wbwhnb/refs/heads/main/h.txt"))()
         end
         
         screenGui:Destroy()
@@ -90566,7 +90566,7 @@ local selectedPlayerName = Players:GetPlayers()[1] and Players:GetPlayers()[1].N
 local Window = WindUI:CreateWindow({
     Title = "tubers93脚本 | 在51区",
     Icon = "",
-    Author = " 大帅哥唐尧",
+    Author = " 大帅哥火车头",
     Folder = "脚本中心",
     Size = UDim2.fromOffset(480, 360),
     Theme = "Dark"
@@ -90866,9 +90866,9 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 WindUI:Popup({
-    Title = "BS",
+    Title = "tubers93",
     IconThemed = true,
-    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用BS",
+    Content = "欢迎尊贵的用户" .. game.Players.LocalPlayer.Name .. "使用tubers93脚本",
     Buttons = {
         {
             Title = "取消",
@@ -90888,9 +90888,9 @@ WindUI:Popup({
 })
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = "BS",
+        Title = "tubers93",
         Icon = "palette",
-    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用BS", 
+    Author = "尊贵的"..game.Players.localPlayer.Name.."欢迎使用tubers93脚本", 
         Folder = "Premium",
         Size = UDim2.fromOffset(550, 320),
         Theme = "Light",
@@ -90910,7 +90910,7 @@ function createUI()
     })
 
     Window:EditOpenButton({
-    Title = "BS",
+    Title = "tubers93",
     Icon = "crown",
     CornerRadius = UDim.new(0, 8),
     StrokeThickness = 3,
