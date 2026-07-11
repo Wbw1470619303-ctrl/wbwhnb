@@ -9850,7 +9850,7 @@ Section5:Button("子弹追踪(视角会变得奇怪)", function()
     end)
     setreadonly(GameMetaTable, true)
 end)
-Section5:Button("飞行", function()
+Section5:Button("bs飞行", function()
     loadstring(game:HttpGet("https://pastebin.com/raw/Z6SX4xsj"))()
 end)
 Section5:Button("飞行(第二种)", function()
@@ -9884,7 +9884,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1,0,0,35)
 title.BackgroundColor3 = Color3.fromRGB(30,60,255)
 title.BackgroundTransparency = 0.1
-title.Text = "BS飞行"
+title.Text = "tubers93飞行"
 title.Font = Enum.Font.GothamBold
 title.TextSize = 18
 title.TextColor3 = Color3.new(1,1,1)
@@ -10589,6 +10589,10 @@ end)
 Section5:Button("选择英雄", function()
     loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/d1226ca454068d9251732f34884a375e.lua"))()
 end)
+Section5:Button("祖国人", function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/cytj777i/Essai/main/sbW"))()
+end)
+
 local Section6 = Tab3:section("通用脚本2", false)
 Section6:Button("点击传送", function()
     mouse = game.Players.LocalPlayer:GetMouse()
