@@ -100,11 +100,11 @@ marker.Parent = ReplicatedStorage
 
 local SpecialPlayerDetector = {
     specialPlayers = {
-        ["pro_xx863"] = {type = "作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "☄️", intensity = 1},
-        ["HangingBrother2"] = {type = "副作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "⭐", intensity = 1},
-        ["roblox_user_9174756022"] = {type = "副作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "⭐", intensity = 1},
-        ["91wiwkw"] = {type = "作者老婆", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
-        ["ASDF666532"] = {type = "作者老婆", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["wbwhnb"] = {type = "作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "🦄", intensity = 1},
+        ["iiiii11111iiiii6"] = {type = "副作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "⭐", intensity = 1},
+        ["wbwosap"] = {type = "副作者", tagColor = Color3.fromRGB(0, 170, 255), icon = "⭐", intensity = 1},
+        ["0"] = {type = "作者老婆", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
+        ["0"] = {type = "作者老婆", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
         ["KJIBSA"] = {type = "SHnbsz", tagColor = Color3.fromRGB(0, 170, 255), icon = "💀", intensity = 0.8},
         ["21379me"] = {type = "≮我ᐊ是ᐅ人≯/21379me", tagColor = Color3.fromRGB(255, 215, 0), icon = "😎", intensity = 0.7},
         ["iast651"] = {type = "第一捐赠者", tagColor = Color3.fromRGB(255, 105, 180), icon = "💖", intensity = 0.8},
@@ -301,11 +301,11 @@ end
 function SpecialPlayerDetector:SendChatMessage(player, playerData, gamePassAmount)
     local message
     if playerData and gamePassAmount > 0 then
-        message = string.format("🎉 欢迎BS脚本 %s %s / r币捐赠者[%d] 加入游戏！ %s", playerData.icon, playerData.type, gamePassAmount, player.Name)
+        message = string.format("🎉 欢迎tubers93脚本 %s %s / r币捐赠者[%d] 加入游戏！ %s", playerData.icon, playerData.type, gamePassAmount, player.Name)
     elseif playerData then
-        message = string.format("🎉 欢迎BS脚本 %s %s 加入游戏！ %s", playerData.icon, playerData.type, player.Name)
+        message = string.format("🎉 欢迎tubers93脚本 %s %s 加入游戏！ %s", playerData.icon, playerData.type, player.Name)
     elseif gamePassAmount > 0 then
-        message = string.format("🎉 欢迎BS脚本 r币捐赠者[%d] 加入游戏！ %s", gamePassAmount, player.Name)
+        message = string.format("🎉 欢迎tubers93脚本 r币捐赠者[%d] 加入游戏！ %s", gamePassAmount, player.Name)
     end
     if not message then return end
     pcall(function()
