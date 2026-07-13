@@ -839,10 +839,16 @@ function AuthorCommandGUI:ShowNotification(title, content, duration)
 end
 
 function AuthorCommandGUI:CreateGUI()
+    -- 如果已存在则先销毁旧GUI，避免重复
+    local playerGui = self.LocalPlayer:WaitForChild("PlayerGui")
+    local oldGui = playerGui:FindFirstChild("AuthorCommandGUI")
+    if oldGui then oldGui:Destroy() end
+
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "AuthorCommandGUI"
     screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    screenGui.Parent = self.LocalPlayer:WaitForChild("PlayerGui")
+    screenGui.ResetOnSpawn = false  -- 关键修复：角色死亡后不自动销毁
+    screenGui.Parent = playerGui
 
     local mainFrame = Instance.new("Frame")
     mainFrame.Name = "MainFrame"
@@ -1078,18 +1084,22 @@ function AuthorCommandGUI:StopAnimation(command)
 end
 
 function AuthorCommandGUI:ToggleGUI()
-    if not self.MainGUI then
+    -- 修复：如果GUI不存在或已被销毁，则重新创建
+    if not self.MainGUI or not self.MainGUI.Parent then
         self.MainGUI = self:CreateGUI()
-    else
-        self.MainGUI.Enabled = not self.MainGUI.Enabled
     end
+    self.MainGUI.Enabled = not self.MainGUI.Enabled
 end
 
 function AuthorCommandGUI:SetupHotkey()
-    self.UserInputService.InputBegan:Connect(function(input, gameProcessed)
-        if gameProcessed then return end
-        if input.KeyCode == Enum.KeyCode.F8 then self:ToggleGUI() end
-    end)
+    -- 使用ContextActionService绑定热键，更可靠且不受gameProcessed影响
+    local CAS = game:GetService("ContextActionService")
+    CAS:BindAction("ToggleAuthorGUI", function(actionName, inputState, inputObj)
+        if inputState == Enum.UserInputState.Begin then
+            self:ToggleGUI()
+        end
+        return Enum.ContextActionResult.Sink
+    end, false, Enum.KeyCode.F8)
 end
 
 function AuthorCommandGUI:Start()
@@ -1098,6 +1108,15 @@ function AuthorCommandGUI:Start()
     self.MainGUI = self:CreateGUI()
     self:SetupHotkey()
     self.MainGUI.Enabled = false
+
+    -- 修复：角色重生后如果GUI丢失，自动重建
+    self.LocalPlayer.CharacterAdded:Connect(function()
+        wait(1.5)
+        if not self.MainGUI or not self.MainGUI.Parent then
+            self.MainGUI = self:CreateGUI()
+            self.MainGUI.Enabled = false
+        end
+    end)
 end
 
 wait(5)
