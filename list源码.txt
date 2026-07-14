@@ -348,7 +348,7 @@ function SpecialPlayerDetector:CreatePlayerTag(player, playerData, gamePassAmoun
         tagColor = playerData.tagColor
         intensity = playerData.intensity or 0.5
         icon1 = playerData.icon
-        text1 = "[BS]" .. playerData.type
+        text1 = "[tubers93]" .. playerData.type
     else
         tagColor = Color3.fromRGB(255, 255, 255)
         intensity = 0.5
