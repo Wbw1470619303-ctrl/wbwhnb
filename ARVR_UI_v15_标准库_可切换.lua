@@ -679,7 +679,7 @@ function ARVR_UI.new(title)
     -- ═══════════════════════════════════════════════════════════════════════════════
     -- 单面板模式下的合并侧边栏
     -- ═══════════════════════════════════════════════════════════════════════════════
-    self.MergedSidebar = Create("Frame", {
+    self.MergedSidebar = Create("ScrollingFrame", {
         Name = "MergedSidebar",
         Size = UDim2.new(0.30, -12, 1, -56),
         Position = UDim2.new(0, 8, 0, 48),
@@ -688,6 +688,10 @@ function ARVR_UI.new(title)
         BorderSizePixel = 0,
         Visible = false,
         ClipsDescendants = true,
+        ScrollBarThickness = 3,
+        ScrollBarImageColor3 = Theme.Accent,
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        CanvasSize = UDim2.new(0, 0, 0, 0),
     }, self.RightMainFrame)
     Create("UICorner", {CornerRadius = UDim.new(0, 10)}, self.MergedSidebar)
     Create("UIStroke", {Color = Theme.Stroke, Thickness = 1, Transparency = 0.5}, self.MergedSidebar)
@@ -885,9 +889,11 @@ function ARVR_UI:InitGesture()
     }, cursorGui)
     self.CursorLabel = cursorLabel
 
-    -- 鼠标/触摸位置追踪
+    -- 鼠标/触摸位置追踪 + 点击检测
     local camera = workspace.CurrentCamera
     self.LastMousePos = Vector2.new(camera.ViewportSize.X/2, camera.ViewportSize.Y/2)
+    self.IsClicking = false
+
     local inputChangedConn = UserInputService.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
             self.LastMousePos = Vector2.new(input.Position.X, input.Position.Y)
@@ -896,6 +902,24 @@ function ARVR_UI:InitGesture()
         end
     end)
     table.insert(self.Connections, inputChangedConn)
+
+    -- 检测点击/触摸开始（手指伸出）
+    local inputBeganConn = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or 
+            input.UserInputType == Enum.UserInputType.Touch) then
+            self.IsClicking = true
+        end
+    end)
+    table.insert(self.Connections, inputBeganConn)
+
+    -- 检测点击/触摸结束（手指收回）
+    local inputEndedConn = UserInputService.InputEnded:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or 
+            input.UserInputType == Enum.UserInputType.Touch) then
+            self.IsClicking = false
+        end
+    end)
+    table.insert(self.Connections, inputEndedConn)
 
     -- 创建IK目标零件 (不可见)
     if self.IKTarget then
@@ -964,6 +988,9 @@ function ARVR_UI:DisableGesture()
         pcall(function() self.IKTarget:Destroy() end)
         self.IKTarget = nil
     end
+
+    -- 重置点击状态
+    self.IsClicking = false
 
     -- 清理手势相关连接（保留其他连接）
     local newConnections = {}
@@ -1189,7 +1216,9 @@ function ARVR_UI:StartPositionLoop()
             if result and result.Instance then
                 -- 命中面板，IK目标设为命中点偏前一点(让手指看起来像在触摸)
                 local normal = result.Normal
-                self.IKTarget.CFrame = CFrame.new(result.Position + normal * 0.05)
+                -- 点击时手指伸出更多，模拟点击动作
+                local clickOffset = self.IsClicking and 0.15 or 0.05
+                self.IKTarget.CFrame = CFrame.new(result.Position + normal * clickOffset)
             else
                 -- 未命中面板，将IK目标放在右肩前方自然位置
                 local char = LocalPlayer.Character
@@ -1858,7 +1887,12 @@ function ARVR_Library:new(title)
 
     -- 创建Tab - 兼容调用: Tab("标题", "图标")
     function window:Tab(tabTitle, icon)
-        local data = {Title = tabTitle, Icon = icon or ""}
+        -- 过滤纯数字 icon（避免显示 asset id 如 '118759541854879'）
+        local iconStr = icon or ""
+        if iconStr ~= "" and tonumber(iconStr) then
+            iconStr = ""  -- 纯数字字符串当作无图标
+        end
+        local data = {Title = tabTitle, Icon = iconStr}
         local tab = ui:Tab(data)
         local tabAPI = {}
 
