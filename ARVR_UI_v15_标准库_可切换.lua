@@ -475,13 +475,17 @@ function ARVR_UI.new(title)
     }, self.LeftControlButtons)
 
     -- 左面板标签页区域
-    self.Sidebar = Create("Frame", {
+    self.Sidebar = Create("ScrollingFrame", {
         Name = "Sidebar",
         Size = UDim2.new(1, -16, 1, -56),
         Position = UDim2.new(0, 8, 0, 48),
         BackgroundColor3 = Theme.BackgroundTransparent,
         BackgroundTransparency = 0.5,
         BorderSizePixel = 0,
+        ScrollBarThickness = 3,
+        ScrollBarImageColor3 = Theme.Accent,
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        CanvasSize = UDim2.new(0, 0, 0, 0),
     }, self.LeftMainFrame)
 
     Create("UIListLayout", {
@@ -1343,6 +1347,8 @@ function ARVR_UI:Tab(data)
         ScrollBarThickness = 4,
         ScrollBarImageColor3 = Theme.Accent,
         Visible = false,
+        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+        CanvasSize = UDim2.new(0, 0, 0, 0),
     }, self.ContentArea)
     Create("UIListLayout", {Padding = UDim.new(0, 8)}, tabData.Content)
     Create("UIPadding", {
@@ -1857,41 +1863,9 @@ function ARVR_Library:new(title)
         local tabAPI = {}
 
         -- 创建Section - 兼容调用: section("标题", true/false)
+        -- 直接返回原始 sectionAPI，它内部通过闭包正确引用了 sectionData.Frame
         function tabAPI:section(sectionTitle, isOpen)
-            local sectionData = ui:CreateSection(tab, sectionTitle, isOpen)
-            local sectionAPI = {}
-
-            -- Label
-            function sectionAPI:Label(text)
-                return ui:CreateLabel(sectionData, text)
-            end
-
-            -- Button
-            function sectionAPI:Button(text, callback)
-                return ui:CreateButton(sectionData, text, callback)
-            end
-
-            -- Toggle
-            function sectionAPI:Toggle(text, flag, default, callback)
-                return ui:CreateToggle(sectionData, text, flag, default, callback)
-            end
-
-            -- Slider
-            function sectionAPI:Slider(text, flag, min, max, default, callback)
-                return ui:CreateSlider(sectionData, text, flag, min, max, default, callback)
-            end
-
-            -- Dropdown
-            function sectionAPI:Dropdown(text, flag, options, callback)
-                return ui:CreateDropdown(sectionData, text, flag, options, callback)
-            end
-
-            -- Textbox
-            function sectionAPI:Textbox(text, flag, placeholder, callback)
-                return ui:CreateTextbox(sectionData, text, flag, placeholder, callback)
-            end
-
-            return sectionAPI
+            return ui:CreateSection(tab, sectionTitle, isOpen)
         end
 
         return tabAPI
