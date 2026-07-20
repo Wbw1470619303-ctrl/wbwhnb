@@ -76410,14 +76410,15 @@ function MusicPlayer.setup(musicTab)
 end
 
 do
-
-local musicTab = Window:Tab("在线音乐", '85611589536956')
+    local musicTab = Window:Tab("在线音乐", '85611589536956')
+    MusicPlayer.setup(musicTab)
+local about = musicTab:section("搜索音乐类", false)
 
 local MusicPlayerSystem = {}
 MusicPlayerSystem.Variables = {
     HttpService = game:GetService("HttpService"),
     RunService = game:GetService("RunService"),
-
+    
     currentSound = nil,
     songList = {},
     songHistory = {},
@@ -76427,17 +76428,16 @@ MusicPlayerSystem.Variables = {
     lastPosition = 0,
     playCount = 0,
     searchHistoryCount = 0,
-
+    
     musicRecordFolder = "tubers93脚本/音乐记录",
     musicLogFile = "tubers93脚本/音乐记录/downloaded.json",
     downloadedMusic = {},
-
+    
     searchLimit = 5,
     playerInfoParagraph = nil,
     searchInfoParagraph = nil,
     libraryDropdown = nil,
-    lastSearchData = nil,
-    selectedLibrarySong = nil
+    lastSearchData = nil
 }
 
 MusicPlayerSystem.InfoLabels = {}
@@ -76446,17 +76446,9 @@ function MusicPlayerSystem.Variables:Initialize()
     if not isfolder(self.musicRecordFolder) then
         makefolder(self.musicRecordFolder)
     end
-
+    
     if isfile(self.musicLogFile) then
-        local ok, data = pcall(function()
-            return self.HttpService:JSONDecode(readfile(self.musicLogFile))
-        end)
-        if ok and type(data) == "table" then
-            self.downloadedMusic = data
-        else
-            self.downloadedMusic = {}
-            writefile(self.musicLogFile, self.HttpService:JSONEncode(self.downloadedMusic))
-        end
+        self.downloadedMusic = self.HttpService:JSONDecode(readfile(self.musicLogFile))
     else
         writefile(self.musicLogFile, self.HttpService:JSONEncode(self.downloadedMusic))
     end
@@ -76468,32 +76460,13 @@ function MusicPlayerSystem.Variables:getAssetPath(filePath)
     elseif getcustomasset then
         return getcustomasset(filePath)
     else
-        MusicPlayerSystem:Notify("脚本", "你的注入器可能不兼容自定义音频！", 3)
+        Notification:Warning("脚本", "你的注入器可能不兼容！！", 3)
         error("你的注入器可能不兼容！！")
     end
 end
 
-function MusicPlayerSystem:Notify(title, text, duration)
-    duration = duration or 3
-    if _G and _G.Notify then
-        pcall(function()
-            _G.Notify(title, text, duration)
-        end)
-    elseif _G and _G.NotifyWarning then
-        pcall(function()
-            _G.NotifyWarning(title, text, duration)
-        end)
-    elseif Notification and Notification.Warning then
-        pcall(function()
-            Notification:Warning(title, text, duration)
-        end)
-    end
-end
-
 function MusicPlayerSystem.Variables:saveDownloadedMusic()
-    pcall(function()
-        writefile(self.musicLogFile, self.HttpService:JSONEncode(self.downloadedMusic))
-    end)
+    writefile(self.musicLogFile, self.HttpService:JSONEncode(self.downloadedMusic))
 end
 
 function MusicPlayerSystem.Variables:isSongDownloaded(songId)
@@ -76502,9 +76475,7 @@ end
 
 function MusicPlayerSystem.Variables:stopCountdown()
     if self.countdownTask then
-        pcall(function()
-            self.countdownTask:Disconnect()
-        end)
+        self.countdownTask:Disconnect()
         self.countdownTask = nil
     end
 end
@@ -76514,10 +76485,7 @@ function MusicPlayerSystem.Variables:urlEncode(str)
 end
 
 function MusicPlayerSystem.Variables:getSongNameFromFile(filePath)
-    local ok, fileName = pcall(function()
-        return filePath:match("([^/]+)$"):gsub(".mp3$", "")
-    end)
-    if not ok then return "未知歌曲" end
+    local fileName = filePath:match("([^/]+)$"):gsub(".mp3$", "")
     local songId = fileName:match("^(%d+)")
     if songId and self.downloadedMusic[songId] then
         return self.downloadedMusic[songId].name
@@ -76526,16 +76494,11 @@ function MusicPlayerSystem.Variables:getSongNameFromFile(filePath)
 end
 
 function MusicPlayerSystem.Variables:refreshFolderList()
-    local ok, files = pcall(function()
-        return listfiles(self.musicRecordFolder)
-    end)
-    if not ok or type(files) ~= "table" then
-        files = {}
-    end
-
+    local files = listfiles(self.musicRecordFolder)
     local musicFiles = {}
+
     for _, file in ipairs(files) do
-        if type(file) == "string" and file:sub(-4) == ".mp3" then
+        if file:sub(-4) == ".mp3" then
             local songName = self:getSongNameFromFile(file)
             table.insert(musicFiles, {
                 path = file,
@@ -76545,7 +76508,7 @@ function MusicPlayerSystem.Variables:refreshFolderList()
     end
 
     table.sort(musicFiles, function(a, b)
-        return tostring(a.name):lower() < tostring(b.name):lower()
+        return a.name:lower() < b.name:lower()
     end)
 
     return musicFiles
@@ -76553,10 +76516,8 @@ end
 
 function MusicPlayerSystem.Variables:playSong(songId, soundId, songName, startPosition)
     if self.currentSound then 
-        pcall(function()
-            self.currentSound:Stop() 
-            self.currentSound:Destroy()
-        end)
+        self.currentSound:Stop() 
+        self.currentSound:Destroy()
         self.currentSound = nil 
     end
     self:stopCountdown()
@@ -76564,26 +76525,10 @@ function MusicPlayerSystem.Variables:playSong(songId, soundId, songName, startPo
     local Sound = Instance.new("Sound")
     Sound.SoundId = soundId
     Sound.Parent = game.Workspace
-    if startPosition and startPosition > 0 then 
-        Sound.TimePosition = startPosition 
-    end
-
-    local loaded = false
-    local conn
-    conn = Sound.Loaded:Connect(function()
-        loaded = true
-        if conn then conn:Disconnect() end
-    end)
-
+    if startPosition then Sound.TimePosition = startPosition end
     Sound:Play()
     self.currentSound = Sound
     self.isPlaying = true
-
-    task.delay(3, function()
-        if not loaded and Sound and Sound.Parent then
-            MusicPlayerSystem:Notify("播放提示", "音频加载较慢，请稍等...", 3)
-        end
-    end)
 end
 
 function MusicPlayerSystem.Variables:updateLibraryUI()
@@ -76598,55 +76543,63 @@ function MusicPlayerSystem.Variables:updateLibraryUI()
         end
     end
 
-    if self.libraryDropdown and self.libraryDropdown.SetOptions then
-        self.libraryDropdown:SetOptions(displayNames)
+    if not self.libraryDropdown then
+        about:Dropdown("本地音乐", "选择要播放的歌曲", displayNames, function(selectedItem)
+            if selectedItem == "无下载文件" then return end
+            local selectedFile
+            for _, item in ipairs(files) do
+                if item.name == selectedItem then
+                    selectedFile = item.path
+                    break
+                end
+            end
+
+            if selectedFile then
+                local soundId = self:getAssetPath(selectedFile)
+                local songName = self:getSongNameFromFile(selectedFile)
+
+                table.insert(self.songHistory,{
+                    songId = selectedFile:match("([^/]+)$"):gsub(".mp3$",""),
+                    soundId = soundId,
+                    songName = songName
+                })
+
+                self.currentSongIndex = #self.songHistory
+                self.playCount += 1
+                self:playSong(selectedFile, soundId, songName)
+            end
+        end)
     end
 end
 
 MusicPlayerSystem.Variables:Initialize()
 
-local about = musicTab:section("搜索音乐类", false)
-
 about:Textbox("搜索数量限制", "输入1-200的数字", "5", function(value)
     local num = tonumber(value)
-    if num and num >= 1 and num <= 200 then
+    if num and num >=1 and num<=200 then
         MusicPlayerSystem.Variables.searchLimit = num
-        MusicPlayerSystem:Notify("提示", "搜索数量已设为 " .. num, 2)
     else
-        MusicPlayerSystem:Notify("提示", "请输入1-200之间的数字", 3)
+        Notification:Warning("提示", "请输入1-200之间的数字", 3)
     end
 end)
 
 about:Textbox("搜索音乐", "输入歌曲名称后按回车", "", function(query)
-    if query == "" or query:match("^%s*$") then return end
+    if query == "" then return end
 
-    local limit = MusicPlayerSystem.Variables.searchLimit or 5
-    local url = "https://music.163.com/api/search/get?s=" .. MusicPlayerSystem.Variables:urlEncode(query) .. "&type=1&limit=" .. tostring(limit)
-
+    local url = "https://music.163.com/api/search/get?s="..MusicPlayerSystem.Variables:urlEncode(query).."&type=1&limit="..tostring(MusicPlayerSystem.Variables.searchLimit or 5)
     local success, response = pcall(function()
         return game:HttpGet(url)
     end)
-
-    if not success or not response or response == "" then
-        MusicPlayerSystem:Notify("搜索失败", "无法连接到音乐API，请检查网络", 3)
+    if not success then
+        Notification:Warning("搜索失败", "无法连接到音乐API", 3)
         return
     end
 
-    local ok, data = pcall(function()
-        return MusicPlayerSystem.Variables.HttpService:JSONDecode(response)
-    end)
-
-    if not ok or not data then
-        MusicPlayerSystem:Notify("搜索失败", "API返回数据解析失败", 3)
-        return
-    end
-
+    local data = MusicPlayerSystem.Variables.HttpService:JSONDecode(response)
     local songs = (data.result and data.result.songs) or {}
     local songList = {}
     for _, song in pairs(songs) do
-        if song and song.name and song.artists and song.artists[1] and song.artists[1].name then
-            table.insert(songList, song.name .. " - " .. song.artists[1].name)
-        end
+        table.insert(songList, song.name.." - "..song.artists[1].name)
     end
 
     MusicPlayerSystem.Variables.songList = songList
@@ -76659,7 +76612,7 @@ about:Textbox("搜索音乐", "输入歌曲名称后按回车", "", function(que
         #songList,
         MusicPlayerSystem.Variables.searchHistoryCount
     )
-
+    
     about:Label(paragraphText)
 
     task.defer(function()
@@ -76668,141 +76621,62 @@ about:Textbox("搜索音乐", "输入歌曲名称后按回车", "", function(que
             about:Dropdown("搜索结果", "选择要下载的歌曲", songList, function(selectedSong)
                 local index = table.find(songList, selectedSong)
                 local songData = currentSearchData[index]
-                if not songData or not songData.id then 
-                    MusicPlayerSystem:Notify("错误", "无法获取歌曲数据", 3)
-                    return 
-                end
+                if not songData then return end
 
                 local songId = tostring(songData.id)
-                local fileName = MusicPlayerSystem.Variables.musicRecordFolder .. "/" .. songId .. ".mp3"
-                local songUrl = "http://music.163.com/song/media/outer/url?id=" .. songId .. ".mp3"
+                local fileName = MusicPlayerSystem.Variables.musicRecordFolder.."/"..songId..".mp3"
+                local songUrl = "http://music.163.com/song/media/outer/url?id="..songId..".mp3"
 
                 local function playLocalSong()
                     local soundId = MusicPlayerSystem.Variables:getAssetPath(fileName)
-                    table.insert(MusicPlayerSystem.Variables.songHistory, {
-                        songId = songId, 
-                        soundId = soundId, 
-                        songName = selectedSong
+                    table.insert(MusicPlayerSystem.Variables.songHistory,{
+                        songId = songId, soundId = soundId, songName = selectedSong
                     })
                     MusicPlayerSystem.Variables.currentSongIndex = #MusicPlayerSystem.Variables.songHistory
-                    MusicPlayerSystem.Variables.playCount = (MusicPlayerSystem.Variables.playCount or 0) + 1
+                    MusicPlayerSystem.Variables.playCount += 1
                     MusicPlayerSystem.Variables:playSong(songId, soundId, selectedSong)
-                    MusicPlayerSystem.Variables:updateLibraryUI()
                 end
 
                 if not MusicPlayerSystem.Variables:isSongDownloaded(songId) then
                     if not isfolder(MusicPlayerSystem.Variables.musicRecordFolder) then
                         makefolder(MusicPlayerSystem.Variables.musicRecordFolder)
                     end
-
-                    MusicPlayerSystem:Notify("下载中", "正在下载: " .. selectedSong, 2)
-
-                    local downloadOk, content = pcall(function()
-                        local reqFunc = http_request or request or (syn and syn.request)
-                        if reqFunc then
-                            local resp = reqFunc({
-                                Url = songUrl,
-                                Method = "GET",
-                                Headers = {
-                                    ["Referer"] = "https://music.163.com/",
-                                    ["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-                                }
-                            })
-                            if resp and resp.Body then
-                                return resp.Body
-                            end
-                        end
-                        return game:HttpGet(songUrl)
-                    end)
-
-                    if not downloadOk or not content or #content < 1000 then
-                        MusicPlayerSystem:Notify("下载失败", "无法获取歌曲文件，可能已被屏蔽", 5)
-                        return
-                    end
-
-                    local isMp3 = false
-                    if content:sub(1, 3) == "ID3" or content:sub(1, 2) == "\xff\xfb" or content:sub(1, 2) == "\xff\xf3" or content:sub(1, 2) == "\xff\xf2" then
-                        isMp3 = true
-                    end
-
-                    if not isMp3 then
-                        MusicPlayerSystem:Notify("下载失败", "获取到的不是有效音频文件", 5)
-                        return
-                    end
-
-                    local writeOk = pcall(function()
+                    Notification:Warning("下载中", "正在下载: "..selectedSong, 2)
+                    local s, e = pcall(function()
+                        local content = game:HttpGet(songUrl)
                         writefile(fileName, content)
                     end)
-
-                    if not writeOk then
-                        MusicPlayerSystem:Notify("保存失败", "无法写入本地文件", 3)
-                        return
+                    if s then
+                        MusicPlayerSystem.Variables.downloadedMusic[songId] = {name=selectedSong, path=fileName, time=os.date("%Y-%m-%d %H:%M:%S")}
+                        MusicPlayerSystem.Variables:saveDownloadedMusic()
+                        Notification:Warning("下载完成", "已下载: "..selectedSong, 3)
+                        playLocalSong()
+                    else
+                        Notification:Warning("下载失败", "无法下载歌曲: "..e, 5)
                     end
-
-                    MusicPlayerSystem.Variables.downloadedMusic[songId] = {
-                        name = selectedSong, 
-                        path = fileName, 
-                        time = os.date("%Y-%m-%d %H:%M:%S")
-                    }
-                    MusicPlayerSystem.Variables:saveDownloadedMusic()
-                    MusicPlayerSystem:Notify("下载完成", "已下载: " .. selectedSong, 3)
-                    playLocalSong()
                 else
-                    MusicPlayerSystem:Notify("已存在", "歌曲已存在本地: " .. selectedSong, 3)
+                    Notification:Warning("已存在", "歌曲已存在本地: "..selectedSong, 3)
                     playLocalSong()
                 end
             end)
-            MusicPlayerSystem:Notify("搜索完成", "找到 " .. #songList .. " 首歌曲", 2)
+            Notification:Warning("搜索完成", "找到 "..#songList.." 首歌曲", 2)
         else
-            about:Dropdown("搜索结果", "未找到歌曲", {"无结果"}, function() end)
-            MusicPlayerSystem:Notify("无结果", "未找到匹配的歌曲", 3)
+            about:Dropdown("搜索结果", "未找到歌曲", {}, function() end)
+            Notification:Warning("无结果", "未找到匹配的歌曲", 3)
         end
     end)
 end)
 
 about:Button("刷新音乐库", function()
     MusicPlayerSystem.Variables:updateLibraryUI()
-    local count = #MusicPlayerSystem.Variables:refreshFolderList()
-    MusicPlayerSystem:Notify("音乐库", "已刷新 (" .. count .. " 首歌曲)", 3)
-end)
-
-MusicPlayerSystem.Variables.libraryDropdown = about:Dropdown("本地音乐", "选择要播放的歌曲", {"无下载文件"}, function(selectedItem)
-    if selectedItem == "无下载文件" or selectedItem == "无结果" then return end
-    MusicPlayerSystem.Variables.selectedLibrarySong = selectedItem
-
-    local files = MusicPlayerSystem.Variables:refreshFolderList()
-    local selectedFile
-    for _, item in ipairs(files) do
-        if item.name == selectedItem then
-            selectedFile = item.path
-            break
-        end
-    end
-
-    if selectedFile then
-        local soundId = MusicPlayerSystem.Variables:getAssetPath(selectedFile)
-        local songName = MusicPlayerSystem.Variables:getSongNameFromFile(selectedFile)
-        local fileSongId = selectedFile:match("([^/]+)$"):gsub(".mp3$", "")
-
-        table.insert(MusicPlayerSystem.Variables.songHistory, {
-            songId = fileSongId,
-            soundId = soundId,
-            songName = songName
-        })
-
-        MusicPlayerSystem.Variables.currentSongIndex = #MusicPlayerSystem.Variables.songHistory
-        MusicPlayerSystem.Variables.playCount = (MusicPlayerSystem.Variables.playCount or 0) + 1
-        MusicPlayerSystem.Variables:playSong(fileSongId, soundId, songName)
-    end
+    Notification:Warning("音乐库", "已刷新 ("..#MusicPlayerSystem.Variables:refreshFolderList().." 首歌曲)", 3)
 end)
 
 about:Button("删除选中音乐", function()
-    local selectedItem = MusicPlayerSystem.Variables.selectedLibrarySong
-    if not selectedItem or selectedItem == "无下载文件" then
-        MusicPlayerSystem:Notify("提示", "请先在下拉框选择一首歌曲", 3)
+    if not MusicPlayerSystem.Variables.libraryDropdown then
+        Notification:Warning("", "请先选择一首歌曲", 3)
         return
     end
-
     local files = MusicPlayerSystem.Variables:refreshFolderList()
     local selectedFile
     for _, item in ipairs(files) do
@@ -76811,23 +76685,16 @@ about:Button("删除选中音乐", function()
             break
         end
     end
-
     if selectedFile and isfile(selectedFile) then
-        local songId = selectedFile:match("([^/]+)$"):gsub(".mp3$", "")
+        local songId = selectedFile:match("([^/]+)$"):gsub(".mp3$","")
         if MusicPlayerSystem.Variables.downloadedMusic[songId] then
             MusicPlayerSystem.Variables.downloadedMusic[songId] = nil
             MusicPlayerSystem.Variables:saveDownloadedMusic()
         end
 
-        pcall(function()
-            delfile(selectedFile)
-        end)
-
-        MusicPlayerSystem:Notify("删除成功", "已删除: " .. MusicPlayerSystem.Variables:getSongNameFromFile(selectedFile), 3)
-        MusicPlayerSystem.Variables.selectedLibrarySong = nil
+        delfile(selectedFile)
+        Notification:Warning("删除成功", "已删除: "..MusicPlayerSystem.Variables:getSongNameFromFile(selectedFile), 3)
         MusicPlayerSystem.Variables:updateLibraryUI()
-    else
-        MusicPlayerSystem:Notify("删除失败", "找不到选中的文件", 3)
     end
 end)
 
@@ -76837,12 +76704,10 @@ about:Button("清空音乐库", function()
 
     for _, file in ipairs(files) do
         if isfile(file.path) then
-            pcall(function()
-                delfile(file.path)
-            end)
-            count = count + 1
+            delfile(file.path)
+            count += 1
 
-            local songId = file.path:match("([^/]+)$"):gsub(".mp3$", "")
+            local songId = file.path:match("([^/]+)$"):gsub(".mp3$","")
             if MusicPlayerSystem.Variables.downloadedMusic[songId] then
                 MusicPlayerSystem.Variables.downloadedMusic[songId] = nil
             end
@@ -76851,25 +76716,20 @@ about:Button("清空音乐库", function()
 
     MusicPlayerSystem.Variables:saveDownloadedMusic()
     MusicPlayerSystem.Variables:updateLibraryUI()
-    MusicPlayerSystem.Variables.selectedLibrarySong = nil
-    MusicPlayerSystem:Notify("清空完成", "已删除 " .. count .. " 首歌曲", 5)
+    Notification:Warning("清空完成", "已删除 "..count.." 首歌曲", 5)
 end)
 
 about:Button("播放", function()
     if not MusicPlayerSystem.Variables.isPlaying and MusicPlayerSystem.Variables.currentSongIndex then
         local song = MusicPlayerSystem.Variables.songHistory[MusicPlayerSystem.Variables.currentSongIndex]
-        if song then
-            MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
-        end
+        MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
     end
 end)
 
 about:Button("暂停", function()
     if MusicPlayerSystem.Variables.currentSound then
         MusicPlayerSystem.Variables.lastPosition = MusicPlayerSystem.Variables.currentSound.TimePosition
-        pcall(function()
-            MusicPlayerSystem.Variables.currentSound:Pause()
-        end)
+        MusicPlayerSystem.Variables.currentSound:Pause()
         MusicPlayerSystem.Variables.isPlaying = false
         MusicPlayerSystem.Variables:stopCountdown()
     end
@@ -76878,38 +76738,30 @@ end)
 about:Button("继续", function()
     if MusicPlayerSystem.Variables.currentSongIndex then
         local song = MusicPlayerSystem.Variables.songHistory[MusicPlayerSystem.Variables.currentSongIndex]
-        if song then
-            MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName, MusicPlayerSystem.Variables.lastPosition)
-        end
+        MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName, MusicPlayerSystem.Variables.lastPosition)
     end
 end)
 
 about:Button("重新播放", function()
     if MusicPlayerSystem.Variables.currentSongIndex then
         local song = MusicPlayerSystem.Variables.songHistory[MusicPlayerSystem.Variables.currentSongIndex]
-        if song then
-            MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
-        end
+        MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
     end
 end)
 
 about:Button("上一首", function()
-    if MusicPlayerSystem.Variables.currentSongIndex and MusicPlayerSystem.Variables.currentSongIndex > 1 then
-        MusicPlayerSystem.Variables.currentSongIndex = MusicPlayerSystem.Variables.currentSongIndex - 1
+    if MusicPlayerSystem.Variables.currentSongIndex and MusicPlayerSystem.Variables.currentSongIndex>1 then
+        MusicPlayerSystem.Variables.currentSongIndex -= 1
         local song = MusicPlayerSystem.Variables.songHistory[MusicPlayerSystem.Variables.currentSongIndex]
-        if song then
-            MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
-        end
+        MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
     end
 end)
 
 about:Button("下一首", function()
-    if MusicPlayerSystem.Variables.currentSongIndex and MusicPlayerSystem.Variables.currentSongIndex < #MusicPlayerSystem.Variables.songHistory then
-        MusicPlayerSystem.Variables.currentSongIndex = MusicPlayerSystem.Variables.currentSongIndex + 1
+    if MusicPlayerSystem.Variables.currentSongIndex and MusicPlayerSystem.Variables.currentSongIndex<#MusicPlayerSystem.Variables.songHistory then
+        MusicPlayerSystem.Variables.currentSongIndex += 1
         local song = MusicPlayerSystem.Variables.songHistory[MusicPlayerSystem.Variables.currentSongIndex]
-        if song then
-            MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
-        end
+        MusicPlayerSystem.Variables:playSong(song.songId, song.soundId, song.songName)
     end
 end)
 
@@ -76922,11 +76774,12 @@ MusicPlayerSystem.InfoLabels = {
 
 local function updatePlayerInfo()
     local vars = MusicPlayerSystem.Variables
-
+    
     if not vars.currentSound or not vars.isPlaying then
+     
         MusicPlayerSystem.InfoLabels.remainTime.Text = "剩余时间: 00:00"
         MusicPlayerSystem.InfoLabels.progress.Text = "播放进度: 00:00 / 00:00"
-
+        
         local songName = "未播放音乐"
         if vars.currentSongIndex and vars.songHistory[vars.currentSongIndex] then
             songName = vars.songHistory[vars.currentSongIndex].songName
@@ -76935,54 +76788,47 @@ local function updatePlayerInfo()
         MusicPlayerSystem.InfoLabels.playCount.Text = "播放次数: " .. (vars.playCount or 0)
         return
     end
-
+    
     local Sound = vars.currentSound
-    if not Sound then
+    if not Sound or not Sound.Playing then
         return
     end
-
-    local ok, timeLength, timePosition = pcall(function()
-        return Sound.TimeLength, Sound.TimePosition
-    end)
-
-    if not ok then return end
-
-    local remain = timeLength - timePosition
-    local cur = timePosition
-    local total = timeLength
-
+    
+    local remain = Sound.TimeLength - Sound.TimePosition
+    local cur = Sound.TimePosition
+    local total = Sound.TimeLength
+    
     local curSongInfo = "未播放音乐"
     if vars.currentSongIndex and vars.songHistory[vars.currentSongIndex] then
         curSongInfo = vars.songHistory[vars.currentSongIndex].songName
     end
-
+    
     local remainTimeText = "00:00"
     if remain > 0 then
-        remainTimeText = string.format("%02d:%02d", math.floor(remain / 60), math.floor(remain % 60))
+        remainTimeText = string.format("%02d:%02d", math.floor(remain/60), math.floor(remain%60))
     end
-
+    
     local curTimeText = "00:00"
     local totalTimeText = "00:00"
     if cur > 0 and total > 0 then
-        curTimeText = string.format("%02d:%02d", math.floor(cur / 60), math.floor(cur % 60))
-        totalTimeText = string.format("%02d:%02d", math.floor(total / 60), math.floor(total % 60))
+        curTimeText = string.format("%02d:%02d", math.floor(cur/60), math.floor(cur%60))
+        totalTimeText = string.format("%02d:%02d", math.floor(total/60), math.floor(total%60))
     end
-
+    
     MusicPlayerSystem.InfoLabels.remainTime.Text = "剩余时间: " .. remainTimeText
     MusicPlayerSystem.InfoLabels.progress.Text = "播放进度: " .. curTimeText .. " / " .. totalTimeText
     MusicPlayerSystem.InfoLabels.currentSong.Text = "当前歌曲: " .. curSongInfo
     MusicPlayerSystem.InfoLabels.playCount.Text = "播放次数: " .. (vars.playCount or 0)
 end
-
 task.spawn(function()
     while true do
-        pcall(updatePlayerInfo)
-        task.wait(0.5)
+        updatePlayerInfo()
+        task.wait(0.1) 
     end
 end)
 
 MusicPlayerSystem.Variables:updateLibraryUI()
-
+end
 
 local actionTab = Window:Tab("动作", '94212016861936')
 wait(0.001)
