@@ -54,6 +54,78 @@ local function IsFirstPerson()
     return distance < 2.5
 end
 
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 触摸防误触系统 + 自动 CanvasSize 更新
+-- ═══════════════════════════════════════════════════════════════════════════════
+local function SetupTouchButton(button, onClick, onHoverIn, onHoverOut)
+    -- 鼠标点击保留原逻辑
+    button.MouseButton1Click:Connect(function()
+        if onClick then
+            local success, err = pcall(onClick)
+            if not success then warn("[ARVR UI] 点击回调错误: " .. tostring(err)) end
+        end
+    end)
+
+    -- 触摸优化：触摸开始时禁用 Active，让 ScrollingFrame 接管滚动
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            local startPos = Vector2.new(input.Position.X, input.Position.Y)
+            local startTime = tick()
+            local isClick = true
+
+            button.Active = false
+            if onHoverIn then onHoverIn() end
+
+            local connChanged, connEnded
+            connChanged = UserInputService.InputChanged:Connect(function(changedInput)
+                if changedInput == input then
+                    local currentPos = Vector2.new(changedInput.Position.X, changedInput.Position.Y)
+                    if (currentPos - startPos).Magnitude > 15 then
+                        isClick = false
+                        if onHoverOut then onHoverOut() end
+                    end
+                end
+            end)
+
+            connEnded = UserInputService.InputEnded:Connect(function(endedInput)
+                if endedInput == input then
+                    pcall(function() connChanged:Disconnect() end)
+                    pcall(function() connEnded:Disconnect() end)
+                    button.Active = true
+
+                    if isClick and (tick() - startTime) < 0.4 then
+                        if onHoverOut then onHoverOut() end
+                        if onClick then
+                            local success, err = pcall(onClick)
+                            if not success then warn("[ARVR UI] 点击回调错误: " .. tostring(err)) end
+                        end
+                    end
+                end
+            end)
+        end
+    end)
+
+    if onHoverIn then
+        button.MouseEnter:Connect(onHoverIn)
+    end
+    if onHoverOut then
+        button.MouseLeave:Connect(onHoverOut)
+    end
+end
+
+local function SetupAutoCanvasSize(scrollingFrame, padding)
+    local layout = scrollingFrame:FindFirstChildOfClass("UIListLayout") or scrollingFrame:FindFirstChildOfClass("UIGridLayout")
+    if layout then
+        local function update()
+            local extra = padding or 20
+            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + extra)
+        end
+        layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
+        task.delay(0.1, update)
+    end
+end
+
 -- ═══════════════════════════════════════════════════════════════════════════════
 -- 颜色主题配置
 -- ═══════════════════════════════════════════════════════════════════════════════
@@ -488,7 +560,7 @@ function ARVR_UI.new(title)
         CanvasSize = UDim2.new(0, 0, 0, 0),
     }, self.LeftMainFrame)
 
-    Create("UIListLayout", {
+    local sidebarLayout = Create("UIListLayout", {
         Padding = UDim.new(0, 6),
         HorizontalAlignment = Enum.HorizontalAlignment.Center,
     }, self.Sidebar)
@@ -497,6 +569,7 @@ function ARVR_UI.new(title)
         PaddingLeft = UDim.new(0, 8),
         PaddingRight = UDim.new(0, 8),
     }, self.Sidebar)
+    SetupAutoCanvasSize(self.Sidebar, 20)
 
     -- ═══════════════════════════════════════════════════════════════════════════════
     -- 右面板: 内容区域 + 顶部控制栏
@@ -696,7 +769,7 @@ function ARVR_UI.new(title)
     Create("UICorner", {CornerRadius = UDim.new(0, 10)}, self.MergedSidebar)
     Create("UIStroke", {Color = Theme.Stroke, Thickness = 1, Transparency = 0.5}, self.MergedSidebar)
 
-    Create("UIListLayout", {
+    local mergedLayout = Create("UIListLayout", {
         Padding = UDim.new(0, 6),
         HorizontalAlignment = Enum.HorizontalAlignment.Center,
     }, self.MergedSidebar)
@@ -705,6 +778,7 @@ function ARVR_UI.new(title)
         PaddingLeft = UDim.new(0, 8),
         PaddingRight = UDim.new(0, 8),
     }, self.MergedSidebar)
+    SetupAutoCanvasSize(self.MergedSidebar, 20)
 
     -- 创建调试控制按钮
     self:CreateControlButtons()
@@ -747,18 +821,20 @@ function ARVR_UI:CreateControlButtons()
         }, parent)
         Create("UICorner", {CornerRadius = UDim.new(0, 6)}, btn)
 
-        btn.MouseEnter:Connect(function()
-            PlayTween(btn, 0.15, {BackgroundTransparency = 0.1, BackgroundColor3 = Theme.Accent})
-        end)
-        btn.MouseLeave:Connect(function()
-            PlayTween(btn, 0.15, {BackgroundTransparency = 0.3, BackgroundColor3 = Theme.BackgroundTransparent})
-        end)
-        btn.MouseButton1Click:Connect(function()
+        local function onClick()
             PlayTween(btn, 0.1, {BackgroundTransparency = 0})
             task.wait(0.1)
             PlayTween(btn, 0.2, {BackgroundTransparency = 0.3})
             if callback then callback() end
-        end)
+        end
+        local function onHoverIn()
+            PlayTween(btn, 0.15, {BackgroundTransparency = 0.1, BackgroundColor3 = Theme.Accent})
+        end
+        local function onHoverOut()
+            PlayTween(btn, 0.15, {BackgroundTransparency = 0.3, BackgroundColor3 = Theme.BackgroundTransparent})
+        end
+
+        SetupTouchButton(btn, onClick, onHoverIn, onHoverOut)
 
         return btn
     end
@@ -1376,43 +1452,47 @@ function ARVR_UI:Tab(data)
         ScrollBarThickness = 4,
         ScrollBarImageColor3 = Theme.Accent,
         Visible = false,
+        ClipsDescendants = false, -- 修改：防止 Dropdown 等被裁剪
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
         CanvasSize = UDim2.new(0, 0, 0, 0),
     }, self.ContentArea)
-    Create("UIListLayout", {Padding = UDim.new(0, 8)}, tabData.Content)
+    local contentLayout = Create("UIListLayout", {Padding = UDim.new(0, 8)}, tabData.Content)
     Create("UIPadding", {
         PaddingTop = UDim.new(0, 8),
         PaddingLeft = UDim.new(0, 8),
         PaddingRight = UDim.new(0, 8),
     }, tabData.Content)
+    SetupAutoCanvasSize(tabData.Content, 20)
 
-    tabButton.MouseButton1Click:Connect(function()
+    local function onTabClick()
         self:SelectTab(tabName)
-    end)
-    tabButton.MouseEnter:Connect(function()
+    end
+    local function onTabHoverIn()
         if self.CurrentTab ~= tabName then
             PlayTween(tabButton, 0.2, {BackgroundTransparency = 0.5})
         end
-    end)
-    tabButton.MouseLeave:Connect(function()
+    end
+    local function onTabHoverOut()
         if self.CurrentTab ~= tabName then
             PlayTween(tabButton, 0.2, {BackgroundTransparency = 0.8})
         end
-    end)
+    end
+    SetupTouchButton(tabButton, onTabClick, onTabHoverIn, onTabHoverOut)
 
-    mergedTabButton.MouseButton1Click:Connect(function()
+    local function onMergedTabClick()
         self:SelectTab(tabName)
-    end)
-    mergedTabButton.MouseEnter:Connect(function()
+    end
+    local function onMergedTabHoverIn()
         if self.CurrentTab ~= tabName then
             PlayTween(mergedTabButton, 0.2, {BackgroundTransparency = 0.5})
         end
-    end)
-    mergedTabButton.MouseLeave:Connect(function()
+    end
+    local function onMergedTabHoverOut()
         if self.CurrentTab ~= tabName then
             PlayTween(mergedTabButton, 0.2, {BackgroundTransparency = 0.8})
         end
-    end)
+    end
+    SetupTouchButton(mergedTabButton, onMergedTabClick, onMergedTabHoverIn, onMergedTabHoverOut)
 
     if #self.TabList == 1 then
         self:SelectTab(tabName)
@@ -1530,7 +1610,7 @@ function ARVR_UI:CreateButton(sectionData, text, callback)
     }, sectionData.Frame)
     Create("UICorner", {CornerRadius = UDim.new(0, 8)}, button)
 
-    button.MouseButton1Click:Connect(function()
+    local function onClick()
         if callback then
             local success, err = pcall(callback)
             if not success then warn("[ARVR UI] 按钮回调错误: " .. tostring(err)) end
@@ -1538,13 +1618,17 @@ function ARVR_UI:CreateButton(sectionData, text, callback)
         PlayTween(button, 0.1, {BackgroundTransparency = 0.7})
         task.wait(0.1)
         PlayTween(button, 0.2, {BackgroundTransparency = 0.9})
-    end)
-    button.MouseEnter:Connect(function()
+    end
+
+    local function onHoverIn()
         PlayTween(button, 0.2, {BackgroundTransparency = 0.8})
-    end)
-    button.MouseLeave:Connect(function()
+    end
+
+    local function onHoverOut()
         PlayTween(button, 0.2, {BackgroundTransparency = 0.9})
-    end)
+    end
+
+    SetupTouchButton(button, onClick, onHoverIn, onHoverOut)
     return button
 end
 
@@ -1555,6 +1639,7 @@ function ARVR_UI:CreateToggle(sectionData, text, flag, default, callback)
         Size = UDim2.new(1, 0, 0, 34),
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
+        Active = true, -- 修改：允许接收输入以进行触摸优化
     }, sectionData.Frame)
     Create("TextLabel", {
         Name = "ToggleLabel",
@@ -1595,8 +1680,37 @@ function ARVR_UI:CreateToggle(sectionData, text, flag, default, callback)
         end
     end
 
+    -- 使用 SetupTouchButton 逻辑（Frame 版本）
     toggleFrame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        if input.UserInputType == Enum.UserInputType.Touch then
+            local startPos = Vector2.new(input.Position.X, input.Position.Y)
+            local startTime = tick()
+            local isClick = true
+
+            toggleFrame.Active = false
+
+            local connChanged, connEnded
+            connChanged = UserInputService.InputChanged:Connect(function(changedInput)
+                if changedInput == input then
+                    local currentPos = Vector2.new(changedInput.Position.X, changedInput.Position.Y)
+                    if (currentPos - startPos).Magnitude > 15 then
+                        isClick = false
+                    end
+                end
+            end)
+
+            connEnded = UserInputService.InputEnded:Connect(function(endedInput)
+                if endedInput == input then
+                    pcall(function() connChanged:Disconnect() end)
+                    pcall(function() connEnded:Disconnect() end)
+                    toggleFrame.Active = true
+
+                    if isClick and (tick() - startTime) < 0.4 then
+                        Toggle()
+                    end
+                end
+            end)
+        elseif input.UserInputType == Enum.UserInputType.MouseButton1 then
             Toggle()
         end
     end)
@@ -1679,7 +1793,7 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
         Size = UDim2.new(1, 0, 0, 34),
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        ClipsDescendants = true,
+        ClipsDescendants = false, -- 修改：防止选项被裁剪
     }, sectionData.Frame)
     local dropdownButton = Create("TextButton", {
         Name = "DropdownButton",
@@ -1702,6 +1816,7 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
         BackgroundTransparency = 0.3,
         BorderSizePixel = 0,
         Visible = false,
+        ZIndex = 50, -- 修改：确保在最上层
     }, dropdownFrame)
     Create("UICorner", {CornerRadius = UDim.new(0, 8)}, optionsContainer)
     Create("UIListLayout", {Padding = UDim.new(0, 2)}, optionsContainer)
@@ -1719,8 +1834,10 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
                 Font = Enum.Font.Gotham,
                 TextSize = 12,
                 AutoButtonColor = false,
+                ZIndex = 51,
             }, optionsContainer)
-            optionButton.MouseButton1Click:Connect(function()
+
+            local function onOptClick()
                 selected = option
                 dropdownButton.Text = text .. ": " .. selected .. " ▼"
                 isOpen = false
@@ -1730,13 +1847,16 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
                     local success, err = pcall(callback, selected)
                     if not success then warn("[ARVR UI] 下拉框回调错误: " .. tostring(err)) end
                 end
-            end)
-            optionButton.MouseEnter:Connect(function()
+            end
+
+            local function onOptHoverIn()
                 optionButton.TextColor3 = Theme.Text
-            end)
-            optionButton.MouseLeave:Connect(function()
+            end
+            local function onOptHoverOut()
                 optionButton.TextColor3 = Theme.TextDim
-            end)
+            end
+
+            SetupTouchButton(optionButton, onOptClick, onOptHoverIn, onOptHoverOut)
         end
     end
     BuildOptions()
@@ -1752,7 +1872,8 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
             dropdownFrame.Size = UDim2.new(1, 0, 0, 34)
         end
     end
-    dropdownButton.MouseButton1Click:Connect(ToggleDropdown)
+
+    SetupTouchButton(dropdownButton, ToggleDropdown)
 
     return {
         GetSelected = function() return selected end,
