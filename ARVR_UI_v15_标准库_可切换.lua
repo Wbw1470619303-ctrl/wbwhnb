@@ -55,81 +55,6 @@ local function IsFirstPerson()
 end
 
 -- ═══════════════════════════════════════════════════════════════════════════════
--- 触摸防误触 + CanvasSize 自动更新 辅助函数
--- ═══════════════════════════════════════════════════════════════════════════════
-local function SetupAutoCanvas(scrollingFrame, padding)
-    local layout = scrollingFrame:FindFirstChildOfClass("UIListLayout") or scrollingFrame:FindFirstChildOfClass("UIGridLayout")
-    if layout then
-        local function update()
-            scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + (padding or 20))
-        end
-        layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(update)
-        task.delay(0.1, update)
-    end
-end
-
-local function SetupTouchProtection(element, onClick)
-    local isDragging = false
-    element.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.Touch then
-            isDragging = false
-            local startPos = Vector2.new(input.Position.X, input.Position.Y)
-            local conn, endConn
-            conn = UserInputService.InputChanged:Connect(function(changed)
-                if changed == input then
-                    local currentPos = Vector2.new(changed.Position.X, changed.Position.Y)
-                    if (currentPos - startPos).Magnitude > 12 then
-                        isDragging = true
-                    end
-                end
-            end)
-            endConn = UserInputService.InputEnded:Connect(function(ended)
-                if ended == input then
-                    pcall(function() conn:Disconnect() end)
-                    pcall(function() endConn:Disconnect() end)
-                end
-            end)
-        end
-    end)
-    element.MouseButton1Click:Connect(function()
-        if isDragging then
-            isDragging = false
-            return
-        end
-        onClick()
-    end)
-end
-
-local function SetupFrameTouchProtection(frame, onClick)
-    local isDragging = false
-    frame.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-            isDragging = false
-            local startPos = Vector2.new(input.Position.X, input.Position.Y)
-            local conn, endConn
-            conn = UserInputService.InputChanged:Connect(function(changed)
-                if changed == input then
-                    local currentPos = Vector2.new(changed.Position.X, changed.Position.Y)
-                    if (currentPos - startPos).Magnitude > 12 then
-                        isDragging = true
-                    end
-                end
-            end)
-            endConn = UserInputService.InputEnded:Connect(function(ended)
-                if ended == input then
-                    pcall(function() conn:Disconnect() end)
-                    pcall(function() endConn:Disconnect() end)
-                    if not isDragging then
-                        onClick()
-                    end
-                    isDragging = false
-                end
-            end)
-        end
-    end)
-end
-
--- ═══════════════════════════════════════════════════════════════════════════════
 -- 颜色主题配置
 -- ═══════════════════════════════════════════════════════════════════════════════
 local Theme = {
@@ -572,7 +497,6 @@ function ARVR_UI.new(title)
         PaddingLeft = UDim.new(0, 8),
         PaddingRight = UDim.new(0, 8),
     }, self.Sidebar)
-    SetupAutoCanvas(self.Sidebar, 20)
 
     -- ═══════════════════════════════════════════════════════════════════════════════
     -- 右面板: 内容区域 + 顶部控制栏
@@ -781,7 +705,6 @@ function ARVR_UI.new(title)
         PaddingLeft = UDim.new(0, 8),
         PaddingRight = UDim.new(0, 8),
     }, self.MergedSidebar)
-    SetupAutoCanvas(self.MergedSidebar, 20)
 
     -- 创建调试控制按钮
     self:CreateControlButtons()
@@ -1453,7 +1376,6 @@ function ARVR_UI:Tab(data)
         ScrollBarThickness = 4,
         ScrollBarImageColor3 = Theme.Accent,
         Visible = false,
-        ClipsDescendants = false,
         AutomaticCanvasSize = Enum.AutomaticSize.Y,
         CanvasSize = UDim2.new(0, 0, 0, 0),
     }, self.ContentArea)
@@ -1463,10 +1385,8 @@ function ARVR_UI:Tab(data)
         PaddingLeft = UDim.new(0, 8),
         PaddingRight = UDim.new(0, 8),
     }, tabData.Content)
-    SetupAutoCanvas(tabData.Content, 20)
 
-    -- 使用触摸防误触
-    SetupTouchProtection(tabButton, function()
+    tabButton.MouseButton1Click:Connect(function()
         self:SelectTab(tabName)
     end)
     tabButton.MouseEnter:Connect(function()
@@ -1480,7 +1400,7 @@ function ARVR_UI:Tab(data)
         end
     end)
 
-    SetupTouchProtection(mergedTabButton, function()
+    mergedTabButton.MouseButton1Click:Connect(function()
         self:SelectTab(tabName)
     end)
     mergedTabButton.MouseEnter:Connect(function()
@@ -1610,7 +1530,7 @@ function ARVR_UI:CreateButton(sectionData, text, callback)
     }, sectionData.Frame)
     Create("UICorner", {CornerRadius = UDim.new(0, 8)}, button)
 
-    local function onClick()
+    button.MouseButton1Click:Connect(function()
         if callback then
             local success, err = pcall(callback)
             if not success then warn("[ARVR UI] 按钮回调错误: " .. tostring(err)) end
@@ -1618,9 +1538,7 @@ function ARVR_UI:CreateButton(sectionData, text, callback)
         PlayTween(button, 0.1, {BackgroundTransparency = 0.7})
         task.wait(0.1)
         PlayTween(button, 0.2, {BackgroundTransparency = 0.9})
-    end
-
-    SetupTouchProtection(button, onClick)
+    end)
     button.MouseEnter:Connect(function()
         PlayTween(button, 0.2, {BackgroundTransparency = 0.8})
     end)
@@ -1677,7 +1595,11 @@ function ARVR_UI:CreateToggle(sectionData, text, flag, default, callback)
         end
     end
 
-    SetupFrameTouchProtection(toggleFrame, Toggle)
+    toggleFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            Toggle()
+        end
+    end)
     return {GetState = function() return state end}
 end
 
@@ -1757,7 +1679,7 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
         Size = UDim2.new(1, 0, 0, 34),
         BackgroundTransparency = 1,
         BorderSizePixel = 0,
-        ClipsDescendants = false,
+        ClipsDescendants = true,
     }, sectionData.Frame)
     local dropdownButton = Create("TextButton", {
         Name = "DropdownButton",
@@ -1780,7 +1702,6 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
         BackgroundTransparency = 0.3,
         BorderSizePixel = 0,
         Visible = false,
-        ZIndex = 50,
     }, dropdownFrame)
     Create("UICorner", {CornerRadius = UDim.new(0, 8)}, optionsContainer)
     Create("UIListLayout", {Padding = UDim.new(0, 2)}, optionsContainer)
@@ -1798,10 +1719,8 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
                 Font = Enum.Font.Gotham,
                 TextSize = 12,
                 AutoButtonColor = false,
-                ZIndex = 51,
             }, optionsContainer)
-            
-            local function onOptClick()
+            optionButton.MouseButton1Click:Connect(function()
                 selected = option
                 dropdownButton.Text = text .. ": " .. selected .. " ▼"
                 isOpen = false
@@ -1811,9 +1730,7 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
                     local success, err = pcall(callback, selected)
                     if not success then warn("[ARVR UI] 下拉框回调错误: " .. tostring(err)) end
                 end
-            end
-            
-            SetupTouchProtection(optionButton, onOptClick)
+            end)
             optionButton.MouseEnter:Connect(function()
                 optionButton.TextColor3 = Theme.Text
             end)
@@ -1835,8 +1752,7 @@ function ARVR_UI:CreateDropdown(sectionData, text, flag, options, callback)
             dropdownFrame.Size = UDim2.new(1, 0, 0, 34)
         end
     end
-    
-    SetupTouchProtection(dropdownButton, ToggleDropdown)
+    dropdownButton.MouseButton1Click:Connect(ToggleDropdown)
 
     return {
         GetSelected = function() return selected end,
